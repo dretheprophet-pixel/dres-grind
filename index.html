@@ -367,8 +367,34 @@
   .badge-strength { background: rgba(124,154,130,0.12); color: var(--sage); }
   .badge-core { background: rgba(91,141,184,0.12); color: var(--blue); }
   .badge-boxing { background: rgba(201,81,74,0.12); color: var(--red); }
+  .badge-kickboxing { background: rgba(201,81,74,0.12); color: var(--red); }
+  .badge-hiit { background: rgba(210,140,50,0.12); color: #b87a2a; }
   .badge-pilates { background: rgba(74,157,110,0.12); color: var(--green); }
   .badge-cooldown { background: rgba(130,110,210,0.12); color: #7060c0; }
+  .badge-walk { background: rgba(124,154,130,0.12); color: var(--sage); }
+  .badge-run { background: rgba(91,141,184,0.12); color: var(--blue); }
+  .badge-basketball { background: rgba(210,140,50,0.12); color: #b87a2a; }
+  /* SELECTED ACTIVITY TAGS */
+  .selected-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; min-height: 24px; }
+  .selected-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: var(--font-cond);
+    letter-spacing: 0.5px;
+  }
+  .selected-tag .tag-x {
+    cursor: pointer;
+    opacity: 0.6;
+    font-size: 13px;
+    line-height: 1;
+    transition: opacity 0.2s;
+  }
+  .selected-tag .tag-x:hover { opacity: 1; }
   /* WEIGHT ENTRY LIST */
   .weight-entry {
     display: flex;
@@ -783,14 +809,21 @@
         <input type="date" class="form-input" id="log-date">
       </div>
       <div class="form-section">
-        <label class="form-label">Workout Types Completed</label>
-        <div class="checkbox-group" id="log-types">
-          <label class="checkbox-pill"><input type="checkbox" value="Strength"> Strength</label>
-          <label class="checkbox-pill"><input type="checkbox" value="Core"> Core</label>
-          <label class="checkbox-pill"><input type="checkbox" value="Boxing"> Boxing</label>
-          <label class="checkbox-pill"><input type="checkbox" value="Pilates"> Pilates</label>
-          <label class="checkbox-pill"><input type="checkbox" value="Cooldown"> Mindful Cooldown</label>
-        </div>
+        <label class="form-label">Activity</label>
+        <select class="form-select" id="log-activity" onchange="addActivity()">
+          <option value="">Select activity...</option>
+          <option value="Strength">Strength</option>
+          <option value="Core">Core</option>
+          <option value="Boxing">Boxing</option>
+          <option value="Kickboxing">Kickboxing</option>
+          <option value="HIIT">HIIT</option>
+          <option value="Pilates">Pilates</option>
+          <option value="Mindful Cooldown">Mindful Cooldown</option>
+          <option value="Outdoor Walk">Outdoor Walk</option>
+          <option value="Run">Run</option>
+          <option value="Basketball">Basketball</option>
+        </select>
+        <div class="selected-tags" id="selected-activities"></div>
       </div>
       <div class="form-section">
         <label class="form-label">Total Duration (minutes)</label>
@@ -1128,10 +1161,12 @@ function energyColor(e) {
   if (e === 'High') return 'var(--green)';
   return 'var(--sage)';
 }
+function getTypeClass(type) {
+  const map = { Strength:'strength', Core:'core', Boxing:'boxing', Kickboxing:'kickboxing', HIIT:'hiit', Pilates:'pilates', 'Mindful Cooldown':'cooldown', Cooldown:'cooldown', 'Outdoor Walk':'walk', Run:'run', Basketball:'basketball' };
+  return map[type] || 'strength';
+}
 function getTypeBadge(type) {
-  const map = { Strength:'strength', Core:'core', Boxing:'boxing', Pilates:'pilates', Cooldown:'cooldown' };
-  const cls = map[type] || 'strength';
-  return `<span class="type-badge badge-${cls}">${type}</span>`;
+  return `<span class="type-badge badge-${getTypeClass(type)}">${type}</span>`;
 }
 
 // ===================== TODAY PAGE =====================
@@ -1347,12 +1382,29 @@ let selectedEffort = 0;
 let selectedEnergy = '';
 
 document.getElementById('log-date').value = today();
+let selectedActivities = [];
 
-document.querySelectorAll('#log-types .checkbox-pill input').forEach(input => {
-  input.addEventListener('change', function() {
-    this.closest('.checkbox-pill').classList.toggle('checked', this.checked);
-  });
-});
+function addActivity() {
+  const sel = document.getElementById('log-activity');
+  const val = sel.value;
+  if (!val || selectedActivities.includes(val)) { sel.value = ''; return; }
+  selectedActivities.push(val);
+  sel.value = '';
+  renderActivityTags();
+}
+
+function removeActivity(type) {
+  selectedActivities = selectedActivities.filter(t => t !== type);
+  renderActivityTags();
+}
+
+function renderActivityTags() {
+  const container = document.getElementById('selected-activities');
+  container.innerHTML = selectedActivities.map(type => {
+    const badge = getTypeBadge(type);
+    return `<span class="selected-tag badge-${getTypeClass(type)}">${type}<span class="tag-x" onclick="removeActivity('${type}')">&times;</span></span>`;
+  }).join('');
+}
 function setRating(type, val) {
   selectedEffort = val;
   document.querySelectorAll('#log-effort .rating-btn').forEach((b,i) => {
@@ -1368,11 +1420,11 @@ function setEnergy(val) {
 
 function saveWorkout() {
   const date = document.getElementById('log-date').value;
-  const types = [...document.querySelectorAll('#log-types input:checked')].map(c => c.value);
+  const types = [...selectedActivities];
   const duration = parseInt(document.getElementById('log-duration').value);
   const calories = parseInt(document.getElementById('log-calories').value);
   if (!date) { alert('Please select a date.'); return; }
-  if (types.length === 0) { alert('Select at least one workout type.'); return; }
+  if (types.length === 0) { alert('Select at least one activity.'); return; }
   if (!duration || duration < 1) { alert('Enter a valid duration.'); return; }
   if (!calories || calories < 1) { alert('Enter calories burned.'); return; }
   if (!selectedEffort) { alert('Select an effort rating.'); return; }
@@ -1383,7 +1435,8 @@ function saveWorkout() {
   showToast('Workout logged!');
   // reset
   document.getElementById('log-date').value = today();
-  document.querySelectorAll('#log-types input').forEach(i => { i.checked = false; i.closest('.checkbox-pill').classList.remove('checked'); });
+  selectedActivities = [];
+  renderActivityTags();
   document.getElementById('log-duration').value = '';
   document.getElementById('log-calories').value = '';
   selectedEffort = 0;
@@ -1588,7 +1641,7 @@ function renderWeekly() {
   if (wkTypeChart) { wkTypeChart.destroy(); }
   const typeCounts = {};
   wkWorkouts.forEach(w => w.types.forEach(t => typeCounts[t] = (typeCounts[t]||0)+1));
-  const typeColors = { Strength:'#7c9a82', Core:'#5b8db8', Boxing:'#c9514a', Pilates:'#4a9d6e', Cooldown:'#7060c0' };
+  const typeColors = { Strength:'#7c9a82', Core:'#5b8db8', Boxing:'#c9514a', Kickboxing:'#c9514a', HIIT:'#b87a2a', Pilates:'#4a9d6e', 'Mindful Cooldown':'#7060c0', Cooldown:'#7060c0', 'Outdoor Walk':'#7c9a82', Run:'#5b8db8', Basketball:'#b87a2a' };
   if (Object.keys(typeCounts).length > 0) {
     wkTypeChart = new Chart(document.getElementById('week-type-chart'), {
       type: 'doughnut',
@@ -1708,7 +1761,7 @@ function renderMonthly() {
   if (moTypeChart) { moTypeChart.destroy(); }
   const typeCounts = {};
   moWorkouts.forEach(w => w.types.forEach(t => typeCounts[t] = (typeCounts[t]||0)+1));
-  const typeColors = { Strength:'#7c9a82', Core:'#5b8db8', Boxing:'#c9514a', Pilates:'#4a9d6e', Cooldown:'#7060c0' };
+  const typeColors = { Strength:'#7c9a82', Core:'#5b8db8', Boxing:'#c9514a', Kickboxing:'#c9514a', HIIT:'#b87a2a', Pilates:'#4a9d6e', 'Mindful Cooldown':'#7060c0', Cooldown:'#7060c0', 'Outdoor Walk':'#7c9a82', Run:'#5b8db8', Basketball:'#b87a2a' };
   if (Object.keys(typeCounts).length > 0) {
     moTypeChart = new Chart(document.getElementById('mo-type-chart'), {
       type: 'doughnut',
