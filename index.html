@@ -905,6 +905,12 @@
     </div>
   </div>
 
+  <!-- No-Drink Streak History -->
+  <div class="card" style="margin-bottom:20px;display:none;">
+    <div class="card-title" style="margin-bottom:10px;">Past No-Drink Streaks</div>
+    <div id="nodrink-history"></div>
+  </div>
+
   <!-- 3. Daily Check-In -->
   <div class="card" style="margin-bottom:20px;">
     <div class="card-title" style="margin-bottom:16px;">Today's Check-In</div>
@@ -1334,7 +1340,7 @@
 <script>
 // ===================== DATA LAYER =====================
 const STORAGE_KEY = 'dreGrind_v1';
-let data = { workouts: [], weights: [], meals: [], whole30Start: null, nodrinkStart: null };
+let data = { workouts: [], weights: [], meals: [], whole30Start: null, nodrinkStart: null, nodrinkBest: 0, nodrinkHistory: [], nodrinkLastMilestone: 0 };
 
 function load() {
   try {
@@ -1345,6 +1351,9 @@ function load() {
       data.weights = parsed.weights || [];
       data.whole30Start = parsed.whole30Start || null;
       data.nodrinkStart = parsed.nodrinkStart || null;
+      data.nodrinkBest = parsed.nodrinkBest || 0;
+      data.nodrinkHistory = parsed.nodrinkHistory || [];
+      data.nodrinkLastMilestone = parsed.nodrinkLastMilestone || 0;
       // Migrate meals: old format { date, items:[] } → new { date, meals:{} }
       const rawMeals = parsed.meals || [];
       data.meals = rawMeals.map(m => {
@@ -1465,6 +1474,7 @@ function renderToday() {
 
   // No-drink streak
   renderNodrinkTracker();
+  renderNodrinkHistory();
 
   // Whole30
   renderWhole30Tracker();
@@ -1509,23 +1519,62 @@ function renderToday() {
 }
 
 // --- No-Drink Streak ---
+const NODRINK_MILESTONES = [7, 14, 21, 30, 60, 90, 180, 365];
+const NODRINK_LABELS = { 7:'1 Week', 14:'2 Weeks', 21:'3 Weeks', 30:'1 Month', 60:'2 Months', 90:'3 Months', 180:'6 Months', 365:'1 Year' };
+
+function getNodrinkDays() {
+  if (!data.nodrinkStart) return 0;
+  const start = new Date(data.nodrinkStart + 'T00:00:00');
+  return Math.max(0, Math.floor((new Date() - start) / (1000 * 60 * 60 * 24)));
+}
+
+function getCurrentMilestone(days) {
+  let milestone = null;
+  for (let i = NODRINK_MILESTONES.length - 1; i >= 0; i--) {
+    if (days >= NODRINK_MILESTONES[i]) { milestone = NODRINK_MILESTONES[i]; break; }
+  }
+  return milestone;
+}
+
 function renderNodrinkTracker() {
   const numEl = document.getElementById('nodrink-num');
   const bodyEl = document.getElementById('nodrink-body');
   if (data.nodrinkStart) {
-    const start = new Date(data.nodrinkStart + 'T00:00:00');
-    const diff = Math.floor((new Date() - start) / (1000 * 60 * 60 * 24));
-    const streakDays = Math.max(0, diff);
+    const streakDays = getNodrinkDays();
     numEl.textContent = streakDays;
-    bodyEl.innerHTML = `<div class="tracker-sub">Since ${fmt(data.nodrinkStart)}</div><button class="btn-sm btn-danger" onclick="resetNodrink()">Reset</button>`;
+
+    // Update best if current exceeds it
+    if (streakDays > data.nodrinkBest) {
+      data.nodrinkBest = streakDays;
+      save();
+    }
+
+    // Milestone check
+    const milestone = getCurrentMilestone(streakDays);
+    let milestoneHtml = '';
+    if (milestone) {
+      milestoneHtml = `<div style="font-family:var(--font-cond);font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue);margin-bottom:6px;">${NODRINK_LABELS[milestone]}</div>`;
+      // Toast for new milestone
+      if (milestone > data.nodrinkLastMilestone) {
+        data.nodrinkLastMilestone = milestone;
+        save();
+        showToast(`${NODRINK_LABELS[milestone]} alcohol-free!`);
+      }
+    }
+
+    const bestHtml = data.nodrinkBest > 0 ? `<div class="tracker-sub" style="margin-top:4px;">Best: ${data.nodrinkBest} day${data.nodrinkBest !== 1 ? 's' : ''}</div>` : '';
+
+    bodyEl.innerHTML = `${milestoneHtml}<div class="tracker-sub">Since ${fmt(data.nodrinkStart)}</div>${bestHtml}<button class="btn-sm btn-danger" onclick="resetNodrink()" style="margin-top:8px;">Reset</button>`;
   } else {
     numEl.textContent = '—';
-    bodyEl.innerHTML = `<button class="btn-sm" onclick="startNodrink()">Start Streak</button>`;
+    const bestHtml = data.nodrinkBest > 0 ? `<div class="tracker-sub" style="margin-bottom:6px;">Best: ${data.nodrinkBest} day${data.nodrinkBest !== 1 ? 's' : ''}</div>` : '';
+    bodyEl.innerHTML = `${bestHtml}<button class="btn-sm" onclick="startNodrink()">Start Streak</button>`;
   }
 }
 
 function startNodrink() {
   data.nodrinkStart = today();
+  data.nodrinkLastMilestone = 0;
   save();
   renderNodrinkTracker();
   showToast('No-drink streak started!');
@@ -1533,9 +1582,43 @@ function startNodrink() {
 
 function resetNodrink() {
   if (!confirm('Reset your no-drink streak? This cannot be undone.')) return;
+  const streakDays = getNodrinkDays();
+  if (streakDays > 0) {
+    const endDate = new Date();
+    endDate.setDate(endDate.getDate() - 1);
+    data.nodrinkHistory.push({
+      start: data.nodrinkStart,
+      end: endDate.toISOString().slice(0, 10),
+      days: streakDays
+    });
+    if (streakDays > data.nodrinkBest) {
+      data.nodrinkBest = streakDays;
+    }
+  }
   data.nodrinkStart = null;
+  data.nodrinkLastMilestone = 0;
   save();
   renderNodrinkTracker();
+  renderNodrinkHistory();
+}
+
+function renderNodrinkHistory() {
+  const container = document.getElementById('nodrink-history');
+  if (!container) return;
+  const history = [...data.nodrinkHistory].sort((a, b) => b.start.localeCompare(a.start));
+  if (history.length === 0) {
+    container.closest('.card').style.display = 'none';
+    return;
+  }
+  container.closest('.card').style.display = '';
+  container.innerHTML = history.map(h => {
+    return `<div class="nutri-day-row">
+      <div class="nutri-day-date">${fmt(h.start)}</div>
+      <div style="flex:1;font-size:13px;color:var(--muted);">to ${fmt(h.end)}</div>
+      <div style="font-family:var(--font-display);font-size:22px;color:var(--blue);">${h.days}</div>
+      <div style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;min-width:40px;">day${h.days !== 1 ? 's' : ''}</div>
+    </div>`;
+  }).join('');
 }
 
 // --- Whole30 ---
