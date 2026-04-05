@@ -233,6 +233,7 @@
     padding: 8px 14px;
     cursor: pointer;
     transition: all 0.2s;
+    -webkit-user-select: none;
     user-select: none;
     font-size: 14px;
   }
@@ -432,12 +433,234 @@
     font-size: 14px;
   }
   .empty-state p { margin-top: 8px; font-size: 13px; }
+  /* COUNTDOWN HERO */
+  .countdown-hero {
+    background: linear-gradient(135deg, #eef4ef, #dfeae1);
+    border: 1px solid var(--sage2);
+    border-radius: 14px;
+    padding: 28px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 20px;
+  }
+  .countdown-hero .hero-date {
+    font-family: var(--font-cond);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .countdown-hero .hero-title {
+    font-family: var(--font-display);
+    font-size: 22px;
+    letter-spacing: 2px;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+  .countdown-hero .hero-sub {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .countdown-num-wrap {
+    text-align: center;
+    min-width: 120px;
+    flex-shrink: 0;
+  }
+  .countdown-num {
+    font-family: var(--font-display);
+    font-size: 72px;
+    line-height: 1;
+    color: var(--sage);
+  }
+  .countdown-unit {
+    font-family: var(--font-cond);
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--sage);
+    opacity: 0.8;
+  }
+  /* TRACKER CARDS */
+  .tracker-card {
+    background: var(--bg1);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+    text-align: center;
+  }
+  .tracker-num {
+    font-family: var(--font-display);
+    font-size: 48px;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .tracker-label {
+    font-family: var(--font-cond);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+  .tracker-sub {
+    font-size: 12px;
+    color: var(--muted2);
+  }
+  .tracker-progress {
+    height: 5px;
+    background: var(--bg3);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 12px;
+  }
+  .tracker-progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.5s ease;
+  }
+  .btn-sm {
+    display: inline-block;
+    background: var(--sage-light);
+    color: var(--sage);
+    border: 1px solid rgba(124,154,130,0.25);
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-family: var(--font-cond);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 8px;
+  }
+  .btn-sm:hover { background: rgba(124,154,130,0.18); }
+  .btn-sm.btn-danger {
+    background: rgba(201,81,74,0.08);
+    color: var(--red);
+    border-color: rgba(201,81,74,0.2);
+  }
+  .btn-sm.btn-danger:hover { background: rgba(201,81,74,0.15); }
+  /* CHECKIN CARD */
+  .checkin-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .checkin-section-title {
+    font-family: var(--font-cond);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .checkin-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+  }
+  .checkin-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .checkin-icon.done { background: rgba(74,157,110,0.12); color: var(--green); }
+  .checkin-icon.pending { background: var(--bg2); color: var(--muted2); }
+  .checkin-text { font-size: 14px; }
+  .checkin-text .label { color: var(--text2); font-weight: 500; }
+  .checkin-text .detail { font-size: 12px; color: var(--muted); margin-top: 1px; }
+  .meal-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .meal-pill {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 9px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    -webkit-user-select: none;
+    user-select: none;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text2);
+  }
+  .meal-pill:hover { border-color: var(--sage2); }
+  .meal-pill.checked {
+    border-color: var(--sage);
+    background: var(--sage-light);
+    color: var(--sage);
+  }
+  .meal-pill .pill-check {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 1.5px solid var(--muted2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    transition: all 0.2s;
+  }
+  .meal-pill.checked .pill-check {
+    background: var(--sage);
+    border-color: var(--sage);
+    color: #fff;
+  }
+  /* WEIGHT SNAPSHOT */
+  .weight-snap {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .weight-snap-stat {
+    text-align: center;
+    min-width: 80px;
+  }
+  .weight-snap-num {
+    font-family: var(--font-display);
+    font-size: 32px;
+    line-height: 1;
+  }
+  .weight-snap-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+  .weight-snap-bar {
+    flex: 1;
+  }
   /* RESPONSIVE tweaks */
   @media (max-width: 768px) {
     .grid-4 { grid-template-columns: repeat(2, 1fr); }
     .grid-3 { grid-template-columns: 1fr 1fr; }
     .grid-2-1 { grid-template-columns: 1fr; }
     .page { padding: 16px; }
+    .countdown-hero { flex-direction: column; text-align: center; padding: 22px 20px; }
+    .countdown-num { font-size: 56px; }
+    .checkin-grid { grid-template-columns: 1fr; }
+    .weight-snap { flex-wrap: wrap; gap: 16px; }
   }
 </style>
 </head>
@@ -456,56 +679,89 @@
 
 <!-- ===================== TODAY ===================== -->
 <div id="page-today" class="page active">
-  <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 28px; gap: 20px; flex-wrap: wrap;">
+
+  <!-- 1. Date + San Diego Countdown Hero -->
+  <div style="margin-bottom:6px;">
+    <div class="today-day" id="today-dayname"></div>
+    <div class="today-date" id="today-datestr"></div>
+  </div>
+  <div class="countdown-hero">
     <div>
-      <div class="today-day" id="today-dayname"></div>
-      <div class="today-date" id="today-datestr"></div>
+      <div class="hero-date">May 23, 2026 — San Diego</div>
+      <div class="hero-title">WEDDING COUNTDOWN</div>
+      <div class="hero-sub" id="cd-sub"></div>
     </div>
-    <div class="streak-badge" style="min-width:140px; text-align:center;">
-      <div class="streak-num" id="streak-num">0</div>
-      <div class="streak-lbl">Day Streak</div>
-    </div>
-  </div>
-
-  <div class="grid-4">
-    <div class="card">
-      <div class="card-title">Current Weight</div>
-      <div class="stat-val" id="td-weight">—</div>
-      <div class="stat-label">lbs</div>
-    </div>
-    <div class="card">
-      <div class="card-title">Goal Weight</div>
-      <div class="stat-val" style="color:var(--green);">205</div>
-      <div class="stat-label">lbs target</div>
-    </div>
-    <div class="card">
-      <div class="card-title">To Go</div>
-      <div class="stat-val" id="td-togo" style="color:var(--sage);">—</div>
-      <div class="stat-label">lbs remaining</div>
-    </div>
-    <div class="card">
-      <div class="card-title">This Week</div>
-      <div class="stat-val" id="td-week-count">0</div>
-      <div class="stat-label">workouts logged</div>
+    <div class="countdown-num-wrap">
+      <div class="countdown-num" id="cd-days">—</div>
+      <div class="countdown-unit">Days to go</div>
     </div>
   </div>
 
-  <!-- Weight goal progress bar -->
+  <!-- 2. Tracker Row -->
+  <div class="grid-3" style="margin-bottom:20px;">
+    <!-- Workout Streak -->
+    <div class="tracker-card">
+      <div class="tracker-num" style="color:var(--sage);" id="streak-num">0</div>
+      <div class="tracker-label">Workout Streak</div>
+      <div class="tracker-sub">Consecutive workout days</div>
+    </div>
+    <!-- No-Drink Streak -->
+    <div class="tracker-card" id="nodrink-card">
+      <div class="tracker-num" style="color:var(--blue);" id="nodrink-num">0</div>
+      <div class="tracker-label">No-Drink Streak</div>
+      <div id="nodrink-body"></div>
+    </div>
+    <!-- Whole30 -->
+    <div class="tracker-card" id="whole30-card">
+      <div class="tracker-num" style="color:var(--green);" id="whole30-num">—</div>
+      <div class="tracker-label">Whole30</div>
+      <div id="whole30-body"></div>
+    </div>
+  </div>
+
+  <!-- 3. Daily Check-In -->
   <div class="card" style="margin-bottom:20px;">
-    <div class="card-title">Weight Journey — 224 → 205 lbs</div>
-    <div class="goal-bar-wrap">
-      <div class="goal-bar-track">
-        <div class="goal-bar-fill" id="goal-bar" style="width:0%"></div>
+    <div class="card-title" style="margin-bottom:16px;">Today's Check-In</div>
+    <div class="checkin-grid">
+      <!-- Workout status -->
+      <div>
+        <div class="checkin-section-title">Workout</div>
+        <div class="checkin-status" id="checkin-workout"></div>
       </div>
-      <div class="goal-nums">
-        <span>Start: 224 lbs</span>
-        <span id="goal-pct-label">0% to goal</span>
-        <span>Goal: 205 lbs</span>
+      <!-- Meal checklist -->
+      <div>
+        <div class="checkin-section-title">Meals Logged</div>
+        <div class="meal-pills" id="meal-pills"></div>
       </div>
     </div>
   </div>
 
-  <!-- Today's Schedule -->
+  <!-- 4. Weight Snapshot -->
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-title" style="margin-bottom:14px;">Weight — 224 → 205 lbs</div>
+    <div class="weight-snap">
+      <div class="weight-snap-stat">
+        <div class="weight-snap-num" id="td-weight">—</div>
+        <div class="weight-snap-label">Current</div>
+      </div>
+      <div class="weight-snap-stat">
+        <div class="weight-snap-num" style="color:var(--sage);" id="td-togo">—</div>
+        <div class="weight-snap-label">To go</div>
+      </div>
+      <div class="weight-snap-bar">
+        <div class="goal-bar-track">
+          <div class="goal-bar-fill" id="goal-bar" style="width:0%"></div>
+        </div>
+        <div class="goal-nums" style="margin-top:6px;">
+          <span>224 lbs</span>
+          <span id="goal-pct-label">0%</span>
+          <span>205 lbs</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Today's Schedule -->
   <div class="card">
     <div class="card-title" style="margin-bottom:14px;">Today's Schedule</div>
     <div id="today-schedule"></div>
@@ -788,12 +1044,19 @@
 <script>
 // ===================== DATA LAYER =====================
 const STORAGE_KEY = 'dreGrind_v1';
-let data = { workouts: [], weights: [] };
+let data = { workouts: [], weights: [], meals: [], whole30Start: null, nodrinkStart: null };
 
 function load() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) data = JSON.parse(raw);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      data.workouts = parsed.workouts || [];
+      data.weights = parsed.weights || [];
+      data.meals = parsed.meals || [];
+      data.whole30Start = parsed.whole30Start || null;
+      data.nodrinkStart = parsed.nodrinkStart || null;
+    }
   } catch(e) {}
 }
 function save() {
@@ -872,17 +1135,55 @@ function getTypeBadge(type) {
 }
 
 // ===================== TODAY PAGE =====================
+const WEDDING_DATE = new Date('2026-05-23T00:00:00');
+const MEAL_OPTIONS = ['Breakfast', 'Lunch', 'Dinner', 'Snacks'];
+
 function renderToday() {
   const now = new Date();
+  const todayStr = today();
   const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   document.getElementById('today-dayname').textContent = days[now.getDay()];
   document.getElementById('today-datestr').textContent = `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
 
-  // Streak
+  // --- 1. Wedding Countdown ---
+  const msLeft = WEDDING_DATE - now;
+  const daysLeft = Math.max(0, Math.ceil(msLeft / (1000 * 60 * 60 * 24)));
+  document.getElementById('cd-days').textContent = daysLeft;
+  if (daysLeft === 0) {
+    document.getElementById('cd-sub').textContent = 'Today is the day!';
+  } else {
+    const weeks = Math.floor(daysLeft / 7);
+    document.getElementById('cd-sub').textContent = weeks > 0 ? `${weeks} week${weeks !== 1 ? 's' : ''} and ${daysLeft % 7} day${(daysLeft % 7) !== 1 ? 's' : ''}` : `${daysLeft} day${daysLeft !== 1 ? 's' : ''}`;
+  }
+
+  // --- 2. Tracker Row ---
+  // Workout streak
   document.getElementById('streak-num').textContent = calcStreak();
 
-  // Weight
+  // No-drink streak
+  renderNodrinkTracker();
+
+  // Whole30
+  renderWhole30Tracker();
+
+  // --- 3. Daily Check-In ---
+  // Workout status
+  const todayWorkout = data.workouts.find(w => w.date === todayStr);
+  const sched = SCHEDULE[now.getDay()];
+  const checkinEl = document.getElementById('checkin-workout');
+  if (todayWorkout) {
+    checkinEl.innerHTML = `<div class="checkin-icon done">&#10003;</div><div class="checkin-text"><div class="label">Done — ${todayWorkout.types.join(', ')}</div><div class="detail">${todayWorkout.duration} min &middot; ${todayWorkout.calories || '—'} kcal</div></div>`;
+  } else if (sched.type === 'rest') {
+    checkinEl.innerHTML = `<div class="checkin-icon done">&#10003;</div><div class="checkin-text"><div class="label">Rest Day</div><div class="detail">${sched.desc}</div></div>`;
+  } else {
+    checkinEl.innerHTML = `<div class="checkin-icon pending">—</div><div class="checkin-text"><div class="label">Not yet logged</div><div class="detail">${sched.desc}</div></div>`;
+  }
+
+  // Meal checklist
+  renderMealPills(todayStr);
+
+  // --- 4. Weight Snapshot ---
   const latest = getLatestWeight();
   if (latest) {
     document.getElementById('td-weight').textContent = latest.toFixed(1);
@@ -890,26 +1191,123 @@ function renderToday() {
     document.getElementById('td-togo').textContent = togo.toFixed(1);
     const pct = Math.min(100, Math.round(((224 - latest) / (224 - 205)) * 100));
     document.getElementById('goal-bar').style.width = Math.max(0, pct) + '%';
-    document.getElementById('goal-pct-label').textContent = Math.max(0,pct) + '% to goal';
+    document.getElementById('goal-pct-label').textContent = Math.max(0, pct) + '%';
   } else {
     document.getElementById('td-weight').textContent = '—';
     document.getElementById('td-togo').textContent = '—';
   }
 
-  // Week workouts
-  const ws = getWeekStart();
-  const wd = getWeekDates(ws);
-  const wkWorkouts = data.workouts.filter(w => wd.includes(w.date));
-  document.getElementById('td-week-count').textContent = wkWorkouts.length;
-
-  // Schedule
-  const sched = SCHEDULE[now.getDay()];
+  // --- 5. Schedule ---
   const schedDiv = document.getElementById('today-schedule');
   if (sched.type === 'rest') {
     schedDiv.innerHTML = `<div class="schedule-block rest"><div class="sched-time">REST</div><div class="sched-info"><h3>Rest Day</h3><p>${sched.desc}</p></div></div>`;
   } else {
     schedDiv.innerHTML = `<div class="schedule-block ${sched.type}"><div class="sched-time">${sched.time}</div><div class="sched-info"><h3>${sched.type === 'pilates' ? 'Pilates & Cooldown' : 'Strength + Boxing'}</h3><p>${sched.desc}</p></div></div>`;
   }
+}
+
+// --- No-Drink Streak ---
+function renderNodrinkTracker() {
+  const numEl = document.getElementById('nodrink-num');
+  const bodyEl = document.getElementById('nodrink-body');
+  if (data.nodrinkStart) {
+    const start = new Date(data.nodrinkStart + 'T00:00:00');
+    const diff = Math.floor((new Date() - start) / (1000 * 60 * 60 * 24));
+    const streakDays = Math.max(0, diff);
+    numEl.textContent = streakDays;
+    bodyEl.innerHTML = `<div class="tracker-sub">Since ${fmt(data.nodrinkStart)}</div><button class="btn-sm btn-danger" onclick="resetNodrink()">Reset</button>`;
+  } else {
+    numEl.textContent = '—';
+    bodyEl.innerHTML = `<button class="btn-sm" onclick="startNodrink()">Start Streak</button>`;
+  }
+}
+
+function startNodrink() {
+  data.nodrinkStart = today();
+  save();
+  renderNodrinkTracker();
+  showToast('No-drink streak started!');
+}
+
+function resetNodrink() {
+  if (!confirm('Reset your no-drink streak? This cannot be undone.')) return;
+  data.nodrinkStart = null;
+  save();
+  renderNodrinkTracker();
+}
+
+// --- Whole30 ---
+function renderWhole30Tracker() {
+  const numEl = document.getElementById('whole30-num');
+  const bodyEl = document.getElementById('whole30-body');
+  if (data.whole30Start) {
+    const start = new Date(data.whole30Start + 'T00:00:00');
+    const diff = Math.floor((new Date() - start) / (1000 * 60 * 60 * 24));
+    const dayNum = Math.min(30, Math.max(1, diff + 1));
+    const completed = diff >= 30;
+    if (completed) {
+      numEl.textContent = '30';
+      numEl.style.color = 'var(--green)';
+      bodyEl.innerHTML = `<div class="tracker-sub" style="color:var(--green);font-weight:600;">Complete!</div><div class="tracker-progress"><div class="tracker-progress-fill" style="width:100%;background:var(--green);"></div></div><button class="btn-sm" onclick="startWhole30()" style="margin-top:10px;">Start New Round</button>`;
+    } else {
+      numEl.textContent = dayNum;
+      const pct = Math.round((dayNum / 30) * 100);
+      const endDate = new Date(start);
+      endDate.setDate(endDate.getDate() + 29);
+      bodyEl.innerHTML = `<div class="tracker-sub">Day ${dayNum} of 30 &middot; Ends ${fmt(endDate.toISOString().slice(0,10))}</div><div class="tracker-progress"><div class="tracker-progress-fill" style="width:${pct}%;background:var(--green);"></div></div><button class="btn-sm btn-danger" onclick="resetWhole30()" style="margin-top:10px;">Reset</button>`;
+    }
+  } else {
+    numEl.textContent = '—';
+    bodyEl.innerHTML = `<button class="btn-sm" onclick="startWhole30()">Start Whole30</button>`;
+  }
+}
+
+function startWhole30() {
+  data.whole30Start = today();
+  save();
+  renderWhole30Tracker();
+  showToast('Whole30 started — day 1!');
+}
+
+function resetWhole30() {
+  if (!confirm('Reset your Whole30? This cannot be undone.')) return;
+  data.whole30Start = null;
+  save();
+  renderWhole30Tracker();
+}
+
+// --- Meal Check-In ---
+function getTodayMeals(dateStr) {
+  const entry = data.meals.find(m => m.date === dateStr);
+  return entry ? entry.items : [];
+}
+
+function toggleMeal(dateStr, meal) {
+  let entry = data.meals.find(m => m.date === dateStr);
+  if (!entry) {
+    entry = { date: dateStr, items: [] };
+    data.meals.push(entry);
+  }
+  const idx = entry.items.indexOf(meal);
+  if (idx >= 0) {
+    entry.items.splice(idx, 1);
+  } else {
+    entry.items.push(meal);
+  }
+  if (entry.items.length === 0) {
+    data.meals = data.meals.filter(m => m.date !== dateStr);
+  }
+  save();
+  renderMealPills(dateStr);
+}
+
+function renderMealPills(dateStr) {
+  const checked = getTodayMeals(dateStr);
+  const container = document.getElementById('meal-pills');
+  container.innerHTML = MEAL_OPTIONS.map(meal => {
+    const isChecked = checked.includes(meal);
+    return `<div class="meal-pill${isChecked ? ' checked' : ''}" onclick="toggleMeal('${dateStr}','${meal}')"><span class="pill-check">${isChecked ? '&#10003;' : ''}</span>${meal}</div>`;
+  }).join('');
 }
 
 function calcStreak() {
