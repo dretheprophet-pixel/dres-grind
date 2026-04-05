@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dre's Fitness Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root {
+    --bg0: #0a0a0a;
+    --bg1: #111111;
+    --bg2: #181818;
+    --bg3: #222222;
+    --bg4: #2a2a2a;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.15);
+    --gold: #e8c84a;
+    --gold2: #f5d76e;
+    --red: #e85c4a;
+    --green: #4ade80;
+    --blue: #60a5fa;
+    --text: #f0ede8;
+    --muted: #888580;
+    --muted2: #555250;
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-cond: 'Barlow Condensed', sans-serif;
+    --font-body: 'Barlow', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg0);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    font-size: 15px;
+  }
+  /* NAV */
+  nav {
+    background: var(--bg1);
+    border-bottom: 1px solid var(--border);
+    padding: 0 28px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-brand {
+    font-family: var(--font-display);
+    font-size: 26px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    padding: 14px 0;
+    margin-right: 40px;
+    flex-shrink: 0;
+  }
+  .nav-brand span { color: var(--text); opacity: 0.5; }
+  .nav-tabs { display: flex; gap: 4px; }
+  .tab-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: var(--font-cond);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 18px 16px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+  /* PAGES */
+  .page { display: none; padding: 28px; max-width: 1100px; margin: 0 auto; }
+  .page.active { display: block; }
+  /* SECTION HEADERS */
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 36px;
+    letter-spacing: 2px;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .section-sub {
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  /* CARDS */
+  .card {
+    background: var(--bg1);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .card-title {
+    font-family: var(--font-cond);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  /* GRID LAYOUTS */
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+  .grid-2-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 14px; margin-bottom: 20px; }
+  /* STAT CARDS */
+  .stat-val {
+    font-family: var(--font-display);
+    font-size: 42px;
+    letter-spacing: 1px;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-label { font-size: 12px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+  .stat-delta { font-size: 13px; font-weight: 600; margin-top: 6px; }
+  .delta-pos { color: var(--green); }
+  .delta-neg { color: var(--red); }
+  .delta-neu { color: var(--muted); }
+  /* TODAY PAGE */
+  .today-date {
+    font-family: var(--font-display);
+    font-size: 52px;
+    letter-spacing: 3px;
+    color: var(--text);
+    line-height: 1;
+  }
+  .today-day { font-family: var(--font-cond); font-size: 18px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 24px; }
+  .schedule-block {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 10px;
+  }
+  .schedule-block.rest { border-left: 3px solid var(--muted2); opacity: 0.6; }
+  .schedule-block.workout { border-left: 3px solid var(--gold); }
+  .schedule-block.pilates { border-left: 3px solid var(--blue); }
+  .sched-time { font-family: var(--font-cond); font-size: 22px; font-weight: 600; color: var(--gold); min-width: 80px; }
+  .sched-info h3 { font-family: var(--font-cond); font-size: 18px; font-weight: 600; letter-spacing: 0.5px; }
+  .sched-info p { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .streak-badge {
+    background: linear-gradient(135deg, #3d3010, #1a1500);
+    border: 1px solid var(--gold);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+  }
+  .streak-num { font-family: var(--font-display); font-size: 64px; color: var(--gold); line-height: 1; }
+  .streak-lbl { font-family: var(--font-cond); font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold2); opacity: 0.8; }
+  /* GOAL BAR */
+  .goal-bar-wrap { margin: 10px 0; }
+  .goal-bar-track {
+    height: 8px;
+    background: var(--bg4);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 8px 0;
+  }
+  .goal-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--green));
+    border-radius: 4px;
+    transition: width 0.5s ease;
+  }
+  .goal-nums { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
+  /* FORMS */
+  .form-section { margin-bottom: 20px; }
+  .form-label {
+    display: block;
+    font-family: var(--font-cond);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .form-input {
+    width: 100%;
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 11px 14px;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-input:focus { border-color: var(--gold); }
+  .form-select {
+    width: 100%;
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 11px 14px;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 15px;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+  }
+  .form-select:focus { border-color: var(--gold); }
+  .checkbox-group { display: flex; flex-wrap: wrap; gap: 8px; }
+  .checkbox-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+    font-size: 14px;
+  }
+  .checkbox-pill input { display: none; }
+  .checkbox-pill.checked { border-color: var(--gold); background: rgba(232,200,74,0.1); color: var(--gold); }
+  /* RATING STARS */
+  .rating-group { display: flex; gap: 6px; }
+  .rating-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: 1px solid var(--border2);
+    background: var(--bg2);
+    color: var(--muted);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: var(--font-cond);
+  }
+  .rating-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .rating-btn.active { background: var(--gold); border-color: var(--gold); color: #0a0a0a; }
+  /* PRIMARY BUTTON */
+  .btn-primary {
+    background: var(--gold);
+    color: #0a0a0a;
+    border: none;
+    border-radius: 8px;
+    padding: 13px 28px;
+    font-family: var(--font-cond);
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+  }
+  .btn-primary:hover { background: var(--gold2); transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 8px 18px;
+    font-family: var(--font-cond);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--text); color: var(--text); }
+  /* TOAST */
+  #toast {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    background: var(--gold);
+    color: #0a0a0a;
+    padding: 14px 22px;
+    border-radius: 8px;
+    font-family: var(--font-cond);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    display: none;
+    z-index: 999;
+    animation: toastIn 0.3s ease;
+  }
+  @keyframes toastIn { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
+  /* HEATMAP */
+  .heatmap-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-top: 12px;
+  }
+  .heat-day {
+    aspect-ratio: 1;
+    border-radius: 4px;
+    background: var(--bg3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: var(--muted2);
+    position: relative;
+    cursor: default;
+  }
+  .heat-day.done { background: rgba(232,200,74,0.7); color: #1a1200; }
+  .heat-day.partial { background: rgba(232,200,74,0.3); color: var(--muted); }
+  .heat-day.rest-day { background: var(--bg2); color: var(--muted2); font-style: italic; }
+  .heat-day.today { outline: 2px solid var(--gold); outline-offset: 1px; }
+  .heat-day-label { font-family: var(--font-cond); font-size: 11px; color: var(--muted2); text-align: center; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .heatmap-days-header { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 8px; }
+  /* LOG TABLE */
+  .log-table { width: 100%; border-collapse: collapse; }
+  .log-table th {
+    font-family: var(--font-cond);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .log-table td {
+    padding: 10px 12px;
+    font-size: 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .log-table tr:last-child td { border-bottom: none; }
+  .log-table tr:hover td { background: var(--bg2); }
+  .type-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: var(--font-cond);
+    letter-spacing: 0.5px;
+    margin-right: 4px;
+  }
+  .badge-strength { background: rgba(232,200,74,0.15); color: var(--gold); }
+  .badge-core { background: rgba(96,165,250,0.15); color: var(--blue); }
+  .badge-boxing { background: rgba(232,92,74,0.15); color: var(--red); }
+  .badge-pilates { background: rgba(74,222,128,0.15); color: var(--green); }
+  .badge-cooldown { background: rgba(160,130,255,0.15); color: #a082ff; }
+  /* WEIGHT ENTRY LIST */
+  .weight-entry {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .weight-entry:last-child { border-bottom: none; }
+  .weight-val { font-family: var(--font-display); font-size: 28px; color: var(--text); }
+  .weight-date { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .delete-btn { background: none; border: none; color: var(--muted2); cursor: pointer; font-size: 16px; padding: 4px 8px; border-radius: 4px; transition: color 0.2s; }
+  .delete-btn:hover { color: var(--red); }
+  /* CHART CONTAINERS */
+  .chart-wrap { position: relative; width: 100%; }
+  /* MONTH SELECTOR */
+  .month-nav { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+  .month-nav button {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    color: var(--text);
+    border-radius: 6px;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .month-nav button:hover { border-color: var(--gold); color: var(--gold); }
+  .month-nav h3 { font-family: var(--font-display); font-size: 28px; letter-spacing: 2px; }
+  /* ENERGY LABELS */
+  .energy-group { display: flex; gap: 8px; }
+  .energy-btn {
+    flex: 1;
+    padding: 10px 0;
+    border-radius: 8px;
+    border: 1px solid var(--border2);
+    background: var(--bg2);
+    color: var(--muted);
+    font-family: var(--font-cond);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+  .energy-btn:hover { border-color: var(--text); color: var(--text); }
+  .energy-btn.active-low { background: rgba(232,92,74,0.15); border-color: var(--red); color: var(--red); }
+  .energy-btn.active-med { background: rgba(232,200,74,0.15); border-color: var(--gold); color: var(--gold); }
+  .energy-btn.active-high { background: rgba(74,222,128,0.15); border-color: var(--green); color: var(--green); }
+  /* DIVIDER */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .empty-state p { margin-top: 8px; font-size: 13px; }
+  /* RESPONSIVE tweaks */
+  @media (max-width: 768px) {
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: 1fr 1fr; }
+    .grid-2-1 { grid-template-columns: 1fr; }
+    .page { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">DRE<span>'S</span> GRIND</div>
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="showPage('today')">Today</button>
+    <button class="tab-btn" onclick="showPage('log')">Log Workout</button>
+    <button class="tab-btn" onclick="showPage('weight')">Weight</button>
+    <button class="tab-btn" onclick="showPage('weekly')">Weekly</button>
+    <button class="tab-btn" onclick="showPage('monthly')">Monthly</button>
+  </div>
+</nav>
+
+<!-- ===================== TODAY ===================== -->
+<div id="page-today" class="page active">
+  <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 28px; gap: 20px; flex-wrap: wrap;">
+    <div>
+      <div class="today-day" id="today-dayname"></div>
+      <div class="today-date" id="today-datestr"></div>
+    </div>
+    <div class="streak-badge" style="min-width:140px; text-align:center;">
+      <div class="streak-num" id="streak-num">0</div>
+      <div class="streak-lbl">Day Streak</div>
+    </div>
+  </div>
+
+  <div class="grid-4">
+    <div class="card">
+      <div class="card-title">Current Weight</div>
+      <div class="stat-val" id="td-weight">—</div>
+      <div class="stat-label">lbs</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Goal Weight</div>
+      <div class="stat-val" style="color:var(--green);">205</div>
+      <div class="stat-label">lbs target</div>
+    </div>
+    <div class="card">
+      <div class="card-title">To Go</div>
+      <div class="stat-val" id="td-togo" style="color:var(--gold);">—</div>
+      <div class="stat-label">lbs remaining</div>
+    </div>
+    <div class="card">
+      <div class="card-title">This Week</div>
+      <div class="stat-val" id="td-week-count">0</div>
+      <div class="stat-label">workouts logged</div>
+    </div>
+  </div>
+
+  <!-- Weight goal progress bar -->
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-title">Weight Journey — 224 → 205 lbs</div>
+    <div class="goal-bar-wrap">
+      <div class="goal-bar-track">
+        <div class="goal-bar-fill" id="goal-bar" style="width:0%"></div>
+      </div>
+      <div class="goal-nums">
+        <span>Start: 224 lbs</span>
+        <span id="goal-pct-label">0% to goal</span>
+        <span>Goal: 205 lbs</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Today's Schedule -->
+  <div class="card">
+    <div class="card-title" style="margin-bottom:14px;">Today's Schedule</div>
+    <div id="today-schedule"></div>
+    <div style="margin-top:16px;">
+      <button class="btn-primary" onclick="showPage('log')">LOG TODAY'S WORKOUT</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== LOG WORKOUT ===================== -->
+<div id="page-log" class="page">
+  <div class="section-title">Log Workout</div>
+  <div class="section-sub">Track what you did, how hard you pushed, how you felt</div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="form-section">
+        <label class="form-label">Date</label>
+        <input type="date" class="form-input" id="log-date">
+      </div>
+      <div class="form-section">
+        <label class="form-label">Workout Types Completed</label>
+        <div class="checkbox-group" id="log-types">
+          <label class="checkbox-pill"><input type="checkbox" value="Strength"> Strength</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Core"> Core</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Boxing"> Boxing</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Pilates"> Pilates</label>
+          <label class="checkbox-pill"><input type="checkbox" value="Cooldown"> Mindful Cooldown</label>
+        </div>
+      </div>
+      <div class="form-section">
+        <label class="form-label">Total Duration (minutes)</label>
+        <input type="number" class="form-input" id="log-duration" placeholder="e.g. 50" min="1" max="240">
+      </div>
+      <div class="form-section">
+        <label class="form-label">Calories Burned</label>
+        <input type="number" class="form-input" id="log-calories" placeholder="e.g. 420" min="1" max="2000">
+      </div>
+    </div>
+    <div class="card">
+      <div class="form-section">
+        <label class="form-label">Effort Rating</label>
+        <div class="rating-group" id="log-effort">
+          <button class="rating-btn" onclick="setRating('effort',1)">1</button>
+          <button class="rating-btn" onclick="setRating('effort',2)">2</button>
+          <button class="rating-btn" onclick="setRating('effort',3)">3</button>
+          <button class="rating-btn" onclick="setRating('effort',4)">4</button>
+          <button class="rating-btn" onclick="setRating('effort',5)">5</button>
+        </div>
+        <div style="font-size:12px;color:var(--muted);margin-top:6px;">1 = easy warmup  •  5 = absolute max</div>
+      </div>
+      <div class="form-section" style="margin-top:20px;">
+        <label class="form-label">Energy Level</label>
+        <div class="energy-group">
+          <button class="energy-btn" id="energy-low" onclick="setEnergy('Low')">Low</button>
+          <button class="energy-btn" id="energy-medium" onclick="setEnergy('Medium')">Medium</button>
+          <button class="energy-btn" id="energy-high" onclick="setEnergy('High')">High</button>
+        </div>
+      </div>
+      <div style="margin-top:28px;">
+        <button class="btn-primary" onclick="saveWorkout()">SAVE WORKOUT</button>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+  <div class="card-title" style="margin-bottom:14px; letter-spacing:2px; text-transform:uppercase; font-family:var(--font-cond); font-size:12px; color:var(--muted);">Recent Workouts</div>
+  <div class="card">
+    <table class="log-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Types</th>
+          <th>Duration</th>
+          <th>Calories</th>
+          <th>Effort</th>
+          <th>Energy</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="log-table-body"></tbody>
+    </table>
+    <div id="log-empty" class="empty-state" style="display:none;">
+      No workouts logged yet. Go crush it!
+    </div>
+  </div>
+</div>
+
+<!-- ===================== WEIGHT ===================== -->
+<div id="page-weight" class="page">
+  <div class="section-title">Weight Check-In</div>
+  <div class="section-sub">Weekly weigh-ins — Sunday mornings recommended</div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="form-section">
+        <label class="form-label">Date</label>
+        <input type="date" class="form-input" id="weight-date">
+      </div>
+      <div class="form-section">
+        <label class="form-label">Weight (lbs)</label>
+        <input type="number" class="form-input" id="weight-val" placeholder="e.g. 222.5" step="0.1" min="100" max="400">
+      </div>
+      <button class="btn-primary" onclick="saveWeight()" style="margin-top:8px;">LOG WEIGHT</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Stats</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:8px;">
+        <div>
+          <div style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">Current</div>
+          <div style="font-family:var(--font-display);font-size:36px;color:var(--text);" id="w-current">—</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">Start</div>
+          <div style="font-family:var(--font-display);font-size:36px;color:var(--muted);">224</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">Total Lost</div>
+          <div style="font-family:var(--font-display);font-size:36px;color:var(--green);" id="w-lost">—</div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">To Goal</div>
+          <div style="font-family:var(--font-display);font-size:36px;color:var(--gold);" id="w-togo">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Weight chart -->
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-title" style="margin-bottom:14px;">Weight Trend</div>
+    <div class="chart-wrap" style="height:260px;">
+      <canvas id="weight-chart"></canvas>
+    </div>
+  </div>
+
+  <!-- Weight history list -->
+  <div class="card">
+    <div class="card-title" style="margin-bottom:12px;">History</div>
+    <div id="weight-list"></div>
+    <div id="weight-empty" class="empty-state" style="display:none;">No weight entries yet. Log your first check-in!</div>
+  </div>
+</div>
+
+<!-- ===================== WEEKLY ===================== -->
+<div id="page-weekly" class="page">
+  <div class="section-title">Weekly Stats</div>
+  <div class="section-sub" id="weekly-range-label">Current week</div>
+
+  <div class="grid-4" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-title">Workouts Done</div>
+      <div class="stat-val" id="wk-done">0</div>
+      <div class="stat-label">of 5 scheduled</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Active Minutes</div>
+      <div class="stat-val" id="wk-mins">0</div>
+      <div class="stat-label">total this week</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Calories Burned</div>
+      <div class="stat-val" id="wk-cals" style="color:var(--red);">0</div>
+      <div class="stat-label">this week</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Avg Effort</div>
+      <div class="stat-val" id="wk-effort">—</div>
+      <div class="stat-label">out of 5</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title" style="margin-bottom:14px;">Completion Rate</div>
+      <div class="chart-wrap" style="height:220px;">
+        <canvas id="week-completion-chart"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:14px;">Workout Type Breakdown</div>
+      <div class="chart-wrap" style="height:220px;">
+        <canvas id="week-type-chart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom:14px;">Calories Burned This Week</div>
+    <div class="chart-wrap" style="height:200px;">
+      <canvas id="week-cal-chart"></canvas>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px;">
+    <div class="card-title" style="margin-bottom:14px;">Effort Over The Week</div>
+    <div class="chart-wrap" style="height:200px;">
+      <canvas id="week-effort-chart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MONTHLY ===================== -->
+<div id="page-monthly" class="page">
+  <div class="month-nav">
+    <button onclick="changeMonth(-1)">&#8592;</button>
+    <h3 id="month-title">Month</h3>
+    <button onclick="changeMonth(1)">&#8594;</button>
+  </div>
+
+  <div class="grid-4" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-title">Consistency</div>
+      <div class="stat-val" id="mo-pct">—</div>
+      <div class="stat-label">completion rate</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Total Workouts</div>
+      <div class="stat-val" id="mo-total">0</div>
+      <div class="stat-label">sessions logged</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Active Minutes</div>
+      <div class="stat-val" id="mo-mins">0</div>
+      <div class="stat-label">this month</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Calories Burned</div>
+      <div class="stat-val" id="mo-cals" style="color:var(--red);">0</div>
+      <div class="stat-label">this month</div>
+    </div>
+  </div>
+
+  <!-- Heatmap -->
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-title" style="margin-bottom:14px;">Workout Heatmap</div>
+    <div class="heatmap-days-header" id="heatmap-header"></div>
+    <div class="heatmap-grid" id="heatmap-grid"></div>
+    <div style="display:flex;gap:16px;margin-top:14px;align-items:center;font-size:12px;color:var(--muted);">
+      <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:2px;background:rgba(232,200,74,0.7);display:inline-block;"></span>Workout done</span>
+      <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:2px;background:var(--bg2);display:inline-block;border:1px solid var(--border);"></span>Rest day</span>
+      <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:2px;background:var(--bg3);display:inline-block;"></span>Missed</span>
+    </div>
+  </div>
+
+  <!-- Monthly charts -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title" style="margin-bottom:14px;">Weight This Month</div>
+      <div class="chart-wrap" style="height:220px;">
+        <canvas id="mo-weight-chart"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:14px;">Workout Type Breakdown</div>
+      <div class="chart-wrap" style="height:220px;">
+        <canvas id="mo-type-chart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" style="margin-bottom:14px;">Effort Trend</div>
+    <div class="chart-wrap" style="height:200px;">
+      <canvas id="mo-effort-chart"></canvas>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px;">
+    <div class="card-title" style="margin-bottom:14px;">Calories Burned Per Session</div>
+    <div class="chart-wrap" style="height:200px;">
+      <canvas id="mo-cal-chart"></canvas>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// ===================== DATA LAYER =====================
+const STORAGE_KEY = 'dreGrind_v1';
+let data = { workouts: [], weights: [] };
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) data = JSON.parse(raw);
+  } catch(e) {}
+}
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+load();
+
+// ===================== SCHEDULE CONFIG =====================
+const SCHEDULE = {
+  0: { label: 'Sunday', type: 'pilates', time: '— REST / PILATES', desc: 'Apple Fitness+ Pilates + Mindful Cooldown' },
+  1: { label: 'Monday', type: 'workout', time: '6:00 – 7:00 AM', desc: '30 min Strength/Core  +  15–20 min Boxing (FitXR)' },
+  2: { label: 'Tuesday', type: 'workout', time: '6:00 – 7:00 AM', desc: '30 min Strength/Core  +  15–20 min Boxing (FitXR)' },
+  3: { label: 'Wednesday', type: 'rest', time: '—', desc: 'Rest Day — recover and recharge' },
+  4: { label: 'Thursday', type: 'workout', time: '6:00 – 7:00 AM', desc: '30 min Strength/Core  +  15–20 min Boxing (FitXR)' },
+  5: { label: 'Friday', type: 'workout', time: '6:00 – 7:00 AM', desc: '30 min Strength/Core  +  15–20 min Boxing (FitXR)' },
+  6: { label: 'Saturday', type: 'workout', time: '8:00 AM', desc: '30 min Strength/Core  +  15–20 min Boxing (FitXR)' },
+};
+const REST_DAYS = [0, 3]; // Sunday (pilates), Wednesday
+
+// ===================== NAV =====================
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  const idx = ['today','log','weight','weekly','monthly'].indexOf(id);
+  document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+  if (id === 'today') renderToday();
+  if (id === 'log') renderLogTable();
+  if (id === 'weight') renderWeightPage();
+  if (id === 'weekly') renderWeekly();
+  if (id === 'monthly') renderMonthly();
+}
+
+// ===================== HELPERS =====================
+function today() { return new Date().toISOString().slice(0,10); }
+function fmt(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr + 'T12:00:00');
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 2500);
+}
+function getWeekStart(d = new Date()) {
+  const dd = new Date(d);
+  const day = dd.getDay();
+  const diff = dd.getDate() - day + (day === 0 ? -6 : 1);
+  dd.setDate(diff);
+  return dd.toISOString().slice(0,10);
+}
+function getWeekDates(weekStart) {
+  const dates = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(weekStart + 'T12:00:00');
+    d.setDate(d.getDate() + i);
+    dates.push(d.toISOString().slice(0,10));
+  }
+  return dates;
+}
+function effortBar(n) {
+  const filled = '█'.repeat(n) + '░'.repeat(5 - n);
+  return `<span style="font-family:var(--font-mono,monospace);letter-spacing:1px;color:var(--gold);font-size:12px;">${filled}</span> ${n}/5`;
+}
+function energyColor(e) {
+  if (e === 'Low') return 'var(--red)';
+  if (e === 'High') return 'var(--green)';
+  return 'var(--gold)';
+}
+function getTypeBadge(type) {
+  const map = { Strength:'strength', Core:'core', Boxing:'boxing', Pilates:'pilates', Cooldown:'cooldown' };
+  const cls = map[type] || 'strength';
+  return `<span class="type-badge badge-${cls}">${type}</span>`;
+}
+
+// ===================== TODAY PAGE =====================
+function renderToday() {
+  const now = new Date();
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('today-dayname').textContent = days[now.getDay()];
+  document.getElementById('today-datestr').textContent = `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+
+  // Streak
+  document.getElementById('streak-num').textContent = calcStreak();
+
+  // Weight
+  const latest = getLatestWeight();
+  if (latest) {
+    document.getElementById('td-weight').textContent = latest.toFixed(1);
+    const togo = Math.max(0, latest - 205);
+    document.getElementById('td-togo').textContent = togo.toFixed(1);
+    const pct = Math.min(100, Math.round(((224 - latest) / (224 - 205)) * 100));
+    document.getElementById('goal-bar').style.width = Math.max(0, pct) + '%';
+    document.getElementById('goal-pct-label').textContent = Math.max(0,pct) + '% to goal';
+  } else {
+    document.getElementById('td-weight').textContent = '—';
+    document.getElementById('td-togo').textContent = '—';
+  }
+
+  // Week workouts
+  const ws = getWeekStart();
+  const wd = getWeekDates(ws);
+  const wkWorkouts = data.workouts.filter(w => wd.includes(w.date));
+  document.getElementById('td-week-count').textContent = wkWorkouts.length;
+
+  // Schedule
+  const sched = SCHEDULE[now.getDay()];
+  const schedDiv = document.getElementById('today-schedule');
+  if (sched.type === 'rest') {
+    schedDiv.innerHTML = `<div class="schedule-block rest"><div class="sched-time">REST</div><div class="sched-info"><h3>Rest Day</h3><p>${sched.desc}</p></div></div>`;
+  } else {
+    schedDiv.innerHTML = `<div class="schedule-block ${sched.type}"><div class="sched-time">${sched.time}</div><div class="sched-info"><h3>${sched.type === 'pilates' ? 'Pilates & Cooldown' : 'Strength + Boxing'}</h3><p>${sched.desc}</p></div></div>`;
+  }
+}
+
+function calcStreak() {
+  if (data.workouts.length === 0) return 0;
+  const logged = new Set(data.workouts.map(w => w.date));
+  let streak = 0;
+  const d = new Date();
+  // check if today is logged or it's still early and yesterday starts the check
+  const todayStr = d.toISOString().slice(0,10);
+  let checkDate = new Date(d);
+  if (!logged.has(todayStr)) {
+    checkDate.setDate(checkDate.getDate() - 1);
+  }
+  while (true) {
+    const ds = checkDate.toISOString().slice(0,10);
+    const dow = checkDate.getDay();
+    if (REST_DAYS.includes(dow)) {
+      checkDate.setDate(checkDate.getDate() - 1);
+      continue;
+    }
+    if (logged.has(ds)) {
+      streak++;
+      checkDate.setDate(checkDate.getDate() - 1);
+    } else break;
+  }
+  return streak;
+}
+
+function getLatestWeight() {
+  if (data.weights.length === 0) return null;
+  const sorted = [...data.weights].sort((a,b) => b.date.localeCompare(a.date));
+  return sorted[0].weight;
+}
+
+// ===================== LOG WORKOUT =====================
+let selectedEffort = 0;
+let selectedEnergy = '';
+
+document.getElementById('log-date').value = today();
+
+document.querySelectorAll('#log-types .checkbox-pill input').forEach(input => {
+  input.addEventListener('change', function() {
+    this.closest('.checkbox-pill').classList.toggle('checked', this.checked);
+  });
+});
+function setRating(type, val) {
+  selectedEffort = val;
+  document.querySelectorAll('#log-effort .rating-btn').forEach((b,i) => {
+    b.classList.toggle('active', i < val);
+  });
+}
+function setEnergy(val) {
+  selectedEnergy = val;
+  document.querySelectorAll('.energy-btn').forEach(b => b.className = 'energy-btn');
+  const map = { Low:'active-low', Medium:'active-med', High:'active-high' };
+  document.getElementById('energy-' + val.toLowerCase()).classList.add(map[val]);
+}
+
+function saveWorkout() {
+  const date = document.getElementById('log-date').value;
+  const types = [...document.querySelectorAll('#log-types input:checked')].map(c => c.value);
+  const duration = parseInt(document.getElementById('log-duration').value);
+  const calories = parseInt(document.getElementById('log-calories').value);
+  if (!date) { alert('Please select a date.'); return; }
+  if (types.length === 0) { alert('Select at least one workout type.'); return; }
+  if (!duration || duration < 1) { alert('Enter a valid duration.'); return; }
+  if (!calories || calories < 1) { alert('Enter calories burned.'); return; }
+  if (!selectedEffort) { alert('Select an effort rating.'); return; }
+  if (!selectedEnergy) { alert('Select an energy level.'); return; }
+
+  data.workouts.push({ date, types, duration, calories, effort: selectedEffort, energy: selectedEnergy });
+  save();
+  showToast('Workout logged!');
+  // reset
+  document.getElementById('log-date').value = today();
+  document.querySelectorAll('#log-types input').forEach(i => { i.checked = false; i.closest('.checkbox-pill').classList.remove('checked'); });
+  document.getElementById('log-duration').value = '';
+  document.getElementById('log-calories').value = '';
+  selectedEffort = 0;
+  selectedEnergy = '';
+  document.querySelectorAll('#log-effort .rating-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.energy-btn').forEach(b => b.className = 'energy-btn');
+  renderLogTable();
+}
+
+function deleteWorkout(idx) {
+  if (!confirm('Remove this workout?')) return;
+  data.workouts.splice(idx, 1);
+  save();
+  renderLogTable();
+}
+
+function renderLogTable() {
+  const tbody = document.getElementById('log-table-body');
+  const empty = document.getElementById('log-empty');
+  const sorted = [...data.workouts].sort((a,b) => b.date.localeCompare(a.date));
+  if (sorted.length === 0) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+  tbody.innerHTML = sorted.map((w, i) => {
+    const realIdx = data.workouts.indexOf(w);
+    return `<tr>
+      <td>${fmt(w.date)}</td>
+      <td>${w.types.map(getTypeBadge).join('')}</td>
+      <td>${w.duration} min</td>
+      <td style="color:var(--red);font-weight:600;">${w.calories ? w.calories.toLocaleString() : '—'} kcal</td>
+      <td>${effortBar(w.effort)}</td>
+      <td style="color:${energyColor(w.energy)};font-weight:600;">${w.energy}</td>
+      <td><button class="delete-btn" onclick="deleteWorkout(${realIdx})">✕</button></td>
+    </tr>`;
+  }).join('');
+}
+
+// ===================== WEIGHT PAGE =====================
+document.getElementById('weight-date').value = today();
+let weightChart = null;
+
+function saveWeight() {
+  const date = document.getElementById('weight-date').value;
+  const weight = parseFloat(document.getElementById('weight-val').value);
+  if (!date) { alert('Select a date.'); return; }
+  if (isNaN(weight) || weight < 50) { alert('Enter a valid weight.'); return; }
+  // remove existing entry for same date
+  data.weights = data.weights.filter(w => w.date !== date);
+  data.weights.push({ date, weight });
+  save();
+  showToast('Weight logged!');
+  document.getElementById('weight-val').value = '';
+  renderWeightPage();
+}
+
+function deleteWeight(date) {
+  if (!confirm('Remove this entry?')) return;
+  data.weights = data.weights.filter(w => w.date !== date);
+  save();
+  renderWeightPage();
+}
+
+function renderWeightPage() {
+  const sorted = [...data.weights].sort((a,b) => a.date.localeCompare(b.date));
+  const latest = sorted.length ? sorted[sorted.length-1].weight : null;
+
+  document.getElementById('w-current').textContent = latest ? latest.toFixed(1) : '—';
+  if (latest) {
+    const lost = 224 - latest;
+    document.getElementById('w-lost').textContent = lost > 0 ? lost.toFixed(1) : '0';
+    document.getElementById('w-togo').textContent = Math.max(0, latest - 205).toFixed(1);
+  } else {
+    document.getElementById('w-lost').textContent = '—';
+    document.getElementById('w-togo').textContent = '—';
+  }
+
+  // Chart
+  if (weightChart) { weightChart.destroy(); weightChart = null; }
+  const canvas = document.getElementById('weight-chart');
+  if (sorted.length > 0) {
+    const labels = sorted.map(w => fmt(w.date));
+    const vals = sorted.map(w => w.weight);
+    // Add goal line
+    const goalLine = Array(sorted.length).fill(205);
+    weightChart = new Chart(canvas, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [
+          {
+            label: 'Weight',
+            data: vals,
+            borderColor: '#e8c84a',
+            backgroundColor: 'rgba(232,200,74,0.1)',
+            pointBackgroundColor: '#e8c84a',
+            pointRadius: 5,
+            tension: 0.3,
+            fill: false,
+          },
+          {
+            label: 'Goal (205)',
+            data: goalLine,
+            borderColor: '#4ade80',
+            borderDash: [6, 4],
+            pointRadius: 0,
+            tension: 0,
+            fill: false,
+            borderWidth: 1.5,
+          }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: '#888580', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.05)' } },
+          y: {
+            ticks: { color: '#888580', font: { size: 11 }, callback: v => v + ' lbs' },
+            grid: { color: 'rgba(255,255,255,0.05)' },
+            min: Math.max(180, Math.min(...vals) - 5),
+            max: Math.min(260, Math.max(...vals, 224) + 5),
+          }
+        }
+      }
+    });
+  }
+
+  // History list
+  const listEl = document.getElementById('weight-list');
+  const emptyEl = document.getElementById('weight-empty');
+  const desc = [...sorted].reverse();
+  if (desc.length === 0) {
+    listEl.innerHTML = '';
+    emptyEl.style.display = 'block';
+    return;
+  }
+  emptyEl.style.display = 'none';
+  listEl.innerHTML = desc.map((w, i) => {
+    const prev = desc[i+1];
+    let delta = '';
+    if (prev) {
+      const diff = (w.weight - prev.weight).toFixed(1);
+      const cls = diff > 0 ? 'delta-neg' : diff < 0 ? 'delta-pos' : 'delta-neu';
+      delta = `<span class="stat-delta ${cls}">${diff > 0 ? '+' : ''}${diff} lbs</span>`;
+    }
+    return `<div class="weight-entry">
+      <div>
+        <div class="weight-val">${w.weight.toFixed(1)} <span style="font-size:14px;color:var(--muted);">lbs</span></div>
+        <div class="weight-date">${fmt(w.date)}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        ${delta}
+        <button class="delete-btn" onclick="deleteWeight('${w.date}')">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ===================== WEEKLY =====================
+let wkCompChart = null, wkTypeChart = null, wkEffortChart = null, wkCalChart = null;
+
+function renderWeekly() {
+  const ws = getWeekStart();
+  const wd = getWeekDates(ws);
+  const wkWorkouts = data.workouts.filter(w => wd.includes(w.date));
+
+  // Stats
+  document.getElementById('wk-done').textContent = wkWorkouts.length;
+  document.getElementById('wk-mins').textContent = wkWorkouts.reduce((a,w) => a+w.duration, 0);
+  document.getElementById('wk-cals').textContent = wkWorkouts.reduce((a,w) => a+(w.calories||0), 0).toLocaleString();
+
+  if (wkWorkouts.length > 0) {
+    const avgEffort = (wkWorkouts.reduce((a,w) => a+w.effort,0)/wkWorkouts.length).toFixed(1);
+    document.getElementById('wk-effort').textContent = avgEffort;
+  } else {
+    document.getElementById('wk-effort').textContent = '—';
+  }
+
+  // Range label
+  document.getElementById('weekly-range-label').textContent = `${fmt(wd[0])} – ${fmt(wd[6])}`;
+
+  // Completion chart (bar per scheduled day)
+  if (wkCompChart) { wkCompChart.destroy(); }
+  const compLabels = wd.map(d => { const dow = new Date(d+'T12:00:00').getDay(); return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][dow]; });
+  const compData = wd.map(d => {
+    const dow = new Date(d+'T12:00:00').getDay();
+    if (REST_DAYS.includes(dow)) return null;
+    return data.workouts.some(w => w.date === d) ? 1 : 0;
+  });
+  const compColors = compData.map(v => v === null ? '#2a2a2a' : v === 1 ? '#e8c84a' : '#3a3a3a');
+  wkCompChart = new Chart(document.getElementById('week-completion-chart'), {
+    type: 'bar',
+    data: { labels: compLabels, datasets: [{ data: compData.map(v => v === null ? 0.3 : v || 0.05), backgroundColor: compColors, borderRadius: 6, borderSkipped: false }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+      scales: { x: { ticks: { color: '#888580' }, grid: { display: false } }, y: { display: false, max: 1.2 } } }
+  });
+
+  // Type breakdown
+  if (wkTypeChart) { wkTypeChart.destroy(); }
+  const typeCounts = {};
+  wkWorkouts.forEach(w => w.types.forEach(t => typeCounts[t] = (typeCounts[t]||0)+1));
+  const typeColors = { Strength:'#e8c84a', Core:'#60a5fa', Boxing:'#e85c4a', Pilates:'#4ade80', Cooldown:'#a082ff' };
+  if (Object.keys(typeCounts).length > 0) {
+    wkTypeChart = new Chart(document.getElementById('week-type-chart'), {
+      type: 'doughnut',
+      data: { labels: Object.keys(typeCounts), datasets: [{ data: Object.values(typeCounts), backgroundColor: Object.keys(typeCounts).map(t => typeColors[t]||'#888'), borderWidth: 0 }] },
+      options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { position: 'bottom', labels: { color: '#888580', font: { size: 12 }, padding: 12, boxWidth: 10 } } } }
+    });
+  }
+
+  // Effort chart
+  if (wkEffortChart) { wkEffortChart.destroy(); }
+  const effortLabels = [], effortData = [];
+  wd.forEach(d => {
+    const w = data.workouts.filter(x => x.date === d);
+    if (w.length) { effortLabels.push(fmt(d)); effortData.push(w[0].effort); }
+  });
+  if (effortLabels.length > 0) {
+    wkEffortChart = new Chart(document.getElementById('week-effort-chart'), {
+      type: 'line',
+      data: { labels: effortLabels, datasets: [{ label:'Effort', data: effortData, borderColor:'#e8c84a', backgroundColor:'rgba(232,200,74,0.1)', pointBackgroundColor:'#e8c84a', pointRadius:6, tension:0.3, fill:true }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: '#888580' }, grid: { color: 'rgba(255,255,255,0.05)' } }, y: { min: 0, max: 5, ticks: { color: '#888580', stepSize: 1 }, grid: { color: 'rgba(255,255,255,0.05)' } } } }
+    });
+  }
+
+  // Calories chart
+  if (wkCalChart) { wkCalChart.destroy(); }
+  const calLabels = [], calData = [];
+  wd.forEach(d => {
+    const w = data.workouts.find(x => x.date === d);
+    if (w && w.calories) { calLabels.push(fmt(d)); calData.push(w.calories); }
+  });
+  if (calLabels.length > 0) {
+    wkCalChart = new Chart(document.getElementById('week-cal-chart'), {
+      type: 'bar',
+      data: { labels: calLabels, datasets: [{ data: calData, backgroundColor: '#e85c4a99', borderColor: '#e85c4a', borderWidth: 1.5, borderRadius: 6, borderSkipped: false }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+        scales: { x: { ticks: { color: '#888580' }, grid: { display: false } }, y: { ticks: { color: '#888580', callback: v => v.toLocaleString() + ' kcal' }, grid: { color: 'rgba(255,255,255,0.05)' }, beginAtZero: true } } }
+    });
+  }
+}
+
+// ===================== MONTHLY =====================
+let currentMonthDate = new Date();
+let moWeightChart = null, moTypeChart = null, moEffortChart = null, moCalChart = null;
+
+function changeMonth(dir) {
+  currentMonthDate.setMonth(currentMonthDate.getMonth() + dir);
+  renderMonthly();
+}
+
+function renderMonthly() {
+  const year = currentMonthDate.getFullYear();
+  const month = currentMonthDate.getMonth();
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('month-title').textContent = `${months[month]} ${year}`;
+
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const firstDow = new Date(year, month, 1).getDay(); // 0=Sun
+
+  // Get all workouts this month
+  const prefix = `${year}-${String(month+1).padStart(2,'0')}`;
+  const moWorkouts = data.workouts.filter(w => w.date.startsWith(prefix));
+  const moWeights = data.weights.filter(w => w.date.startsWith(prefix)).sort((a,b) => a.date.localeCompare(b.date));
+
+  // Stats
+  const scheduledCount = [...Array(daysInMonth)].filter((_,i) => {
+    const dow = new Date(year, month, i+1).getDay();
+    return !REST_DAYS.includes(dow);
+  }).length;
+  const pct = scheduledCount > 0 ? Math.round((moWorkouts.length / scheduledCount) * 100) : 0;
+  document.getElementById('mo-pct').textContent = pct + '%';
+  document.getElementById('mo-total').textContent = moWorkouts.length;
+  document.getElementById('mo-mins').textContent = moWorkouts.reduce((a,w) => a+w.duration, 0);
+  document.getElementById('mo-cals').textContent = moWorkouts.reduce((a,w) => a+(w.calories||0), 0).toLocaleString();
+
+  // Heatmap
+  const header = document.getElementById('heatmap-header');
+  header.innerHTML = ['S','M','T','W','T','F','S'].map(d => `<div class="heat-day-label">${d}</div>`).join('');
+  const grid = document.getElementById('heatmap-grid');
+  const todayStr = today();
+  const cells = [];
+  // padding for first day of month
+  for (let i = 0; i < firstDow; i++) cells.push('<div></div>');
+  for (let day = 1; day <= daysInMonth; day++) {
+    const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const dow = new Date(year, month, day).getDay();
+    const isRest = REST_DAYS.includes(dow);
+    const isToday = dateStr === todayStr;
+    const hasWorkout = data.workouts.some(w => w.date === dateStr);
+    const isFuture = dateStr > todayStr;
+    let cls = 'heat-day';
+    if (isRest) cls += ' rest-day';
+    else if (hasWorkout) cls += ' done';
+    else if (!isFuture) cls += ''; // missed
+    if (isToday) cls += ' today';
+    cells.push(`<div class="${cls}" title="${dateStr}">${day}</div>`);
+  }
+  grid.innerHTML = cells.join('');
+
+  // Weight chart
+  if (moWeightChart) { moWeightChart.destroy(); }
+  if (moWeights.length > 0) {
+    const wLabels = moWeights.map(w => fmt(w.date));
+    const wVals = moWeights.map(w => w.weight);
+    moWeightChart = new Chart(document.getElementById('mo-weight-chart'), {
+      type: 'line',
+      data: { labels: wLabels, datasets: [
+        { label:'Weight', data: wVals, borderColor:'#e8c84a', backgroundColor:'rgba(232,200,74,0.1)', pointBackgroundColor:'#e8c84a', pointRadius:5, tension:0.3, fill:true },
+        { label:'Goal', data: Array(wVals.length).fill(205), borderColor:'#4ade80', borderDash:[6,4], pointRadius:0, borderWidth:1.5, fill:false }
+      ]},
+      options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+        scales:{ x:{ticks:{color:'#888580',font:{size:10}},grid:{color:'rgba(255,255,255,0.05)'}}, y:{ticks:{color:'#888580',callback:v=>v+' lbs'},grid:{color:'rgba(255,255,255,0.05)'},min:Math.max(180,Math.min(...wVals)-3),max:Math.min(260,Math.max(...wVals,224)+3) } } }
+    });
+  }
+
+  // Type breakdown
+  if (moTypeChart) { moTypeChart.destroy(); }
+  const typeCounts = {};
+  moWorkouts.forEach(w => w.types.forEach(t => typeCounts[t] = (typeCounts[t]||0)+1));
+  const typeColors = { Strength:'#e8c84a', Core:'#60a5fa', Boxing:'#e85c4a', Pilates:'#4ade80', Cooldown:'#a082ff' };
+  if (Object.keys(typeCounts).length > 0) {
+    moTypeChart = new Chart(document.getElementById('mo-type-chart'), {
+      type: 'doughnut',
+      data: { labels: Object.keys(typeCounts), datasets: [{ data: Object.values(typeCounts), backgroundColor: Object.keys(typeCounts).map(t => typeColors[t]||'#888'), borderWidth:0 }] },
+      options: { responsive:true, maintainAspectRatio:false, cutout:'65%', plugins:{legend:{position:'bottom',labels:{color:'#888580',font:{size:12},padding:12,boxWidth:10}}} }
+    });
+  }
+
+  // Effort trend
+  if (moEffortChart) { moEffortChart.destroy(); }
+  const sortedMo = [...moWorkouts].sort((a,b) => a.date.localeCompare(b.date));
+  const eLabels = sortedMo.map(w => fmt(w.date));
+  const eData = sortedMo.map(w => w.effort);
+  if (eLabels.length > 0) {
+    moEffortChart = new Chart(document.getElementById('mo-effort-chart'), {
+      type: 'bar',
+      data: { labels: eLabels, datasets: [{ data: eData, backgroundColor: eData.map(v => v >= 4 ? '#e8c84a' : v >= 3 ? '#f5d76e88' : '#60a5fa55'), borderRadius:6, borderSkipped:false }] },
+      options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+        scales:{ x:{ticks:{color:'#888580',font:{size:10}},grid:{display:false}}, y:{min:0,max:5,ticks:{color:'#888580',stepSize:1},grid:{color:'rgba(255,255,255,0.05)'}} } }
+    });
+  }
+
+  // Calories per session
+  if (moCalChart) { moCalChart.destroy(); }
+  const cLabels = sortedMo.filter(w => w.calories).map(w => fmt(w.date));
+  const cData = sortedMo.filter(w => w.calories).map(w => w.calories);
+  if (cLabels.length > 0) {
+    moCalChart = new Chart(document.getElementById('mo-cal-chart'), {
+      type: 'bar',
+      data: { labels: cLabels, datasets: [{ data: cData, backgroundColor: '#e85c4a99', borderColor: '#e85c4a', borderWidth: 1.5, borderRadius: 6, borderSkipped: false }] },
+      options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+        scales:{ x:{ticks:{color:'#888580',font:{size:10}},grid:{display:false}}, y:{beginAtZero:true, ticks:{color:'#888580',callback: v => v.toLocaleString()+' kcal'},grid:{color:'rgba(255,255,255,0.05)'}} } }
+    });
+  }
+}
+
+// ===================== INIT =====================
+renderToday();
+renderLogTable();
+</script>
+</body>
+</html>
