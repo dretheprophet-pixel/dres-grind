@@ -677,6 +677,162 @@
   .weight-snap-bar {
     flex: 1;
   }
+  /* NUTRITION PAGE */
+  .meal-log-card {
+    background: var(--bg1);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+    margin-bottom: 12px;
+  }
+  .meal-log-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .meal-log-name {
+    font-family: var(--font-cond);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text);
+  }
+  .compliance-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: var(--font-cond);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border2);
+    transition: all 0.2s;
+  }
+  .compliance-toggle.compliant {
+    background: rgba(74,157,110,0.10);
+    border-color: var(--green);
+    color: var(--green);
+  }
+  .compliance-toggle.not-compliant {
+    background: rgba(201,81,74,0.08);
+    border-color: var(--red);
+    color: var(--red);
+  }
+  .meal-log-card textarea {
+    width: 100%;
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 14px;
+    resize: vertical;
+    min-height: 38px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .meal-log-card textarea:focus { border-color: var(--sage); }
+  .meal-log-card textarea::placeholder { color: var(--muted2); }
+  .meal-notes {
+    margin-top: 8px;
+  }
+  .meal-notes textarea {
+    min-height: 30px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  /* NUTRITION HISTORY */
+  .nutri-day-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .nutri-day-row:last-child { border-bottom: none; }
+  .nutri-day-date {
+    min-width: 100px;
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .nutri-day-pills {
+    display: flex;
+    gap: 6px;
+    flex: 1;
+    flex-wrap: wrap;
+  }
+  .nutri-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: var(--font-cond);
+    letter-spacing: 0.5px;
+  }
+  .nutri-pill.c-yes { background: rgba(74,157,110,0.10); color: var(--green); }
+  .nutri-pill.c-no { background: rgba(201,81,74,0.08); color: var(--red); }
+  .nutri-pill.c-none { background: var(--bg2); color: var(--muted2); }
+  .nutri-day-status {
+    font-size: 16px;
+    min-width: 28px;
+    text-align: center;
+  }
+  /* RULES REFERENCE */
+  .rules-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+  .rules-col h4 {
+    font-family: var(--font-cond);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--border);
+  }
+  .rules-col.rules-yes h4 { color: var(--green); border-color: var(--green); }
+  .rules-col.rules-no h4 { color: var(--red); border-color: var(--red); }
+  .rules-col.rules-gray h4 { color: #b87a2a; border-color: #b87a2a; }
+  .rules-col ul {
+    list-style: none;
+    padding: 0;
+  }
+  .rules-col li {
+    font-size: 13px;
+    color: var(--text2);
+    padding: 4px 0;
+    padding-left: 18px;
+    position: relative;
+  }
+  .rules-col li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+  }
+  .rules-yes li::before { background: rgba(74,157,110,0.35); }
+  .rules-no li::before { background: rgba(201,81,74,0.3); }
+  .rules-gray li::before { background: rgba(184,122,42,0.3); }
   /* RESPONSIVE tweaks */
   @media (max-width: 768px) {
     .grid-4 { grid-template-columns: repeat(2, 1fr); }
@@ -687,6 +843,9 @@
     .countdown-num { font-size: 56px; }
     .checkin-grid { grid-template-columns: 1fr; }
     .weight-snap { flex-wrap: wrap; gap: 16px; }
+    .rules-grid { grid-template-columns: 1fr; }
+    .nav-tabs { overflow-x: auto; flex-wrap: nowrap; }
+    .tab-btn { white-space: nowrap; flex-shrink: 0; }
   }
 </style>
 </head>
@@ -697,6 +856,7 @@
   <div class="nav-tabs">
     <button class="tab-btn active" onclick="showPage('today')">Today</button>
     <button class="tab-btn" onclick="showPage('log')">Log Workout</button>
+    <button class="tab-btn" onclick="showPage('nutrition')">Nutrition</button>
     <button class="tab-btn" onclick="showPage('weight')">Weight</button>
     <button class="tab-btn" onclick="showPage('weekly')">Weekly</button>
     <button class="tab-btn" onclick="showPage('monthly')">Monthly</button>
@@ -879,6 +1039,103 @@
     </table>
     <div id="log-empty" class="empty-state" style="display:none;">
       No workouts logged yet. Go crush it!
+    </div>
+  </div>
+</div>
+
+<!-- ===================== NUTRITION ===================== -->
+<div id="page-nutrition" class="page">
+  <div class="section-title">Nutrition</div>
+  <div class="section-sub">Whole30 tracking &amp; daily meal log</div>
+
+  <!-- 1. Whole30 Status Summary -->
+  <div class="card" style="margin-bottom:20px;" id="nutri-w30-card">
+    <div class="card-title" style="margin-bottom:14px;">Whole30 Status</div>
+    <div id="nutri-w30-body"></div>
+  </div>
+
+  <!-- 2. Compliance Streak -->
+  <div class="grid-2" style="margin-bottom:20px;">
+    <div class="tracker-card">
+      <div class="tracker-num" style="color:var(--green);" id="nutri-comp-streak">0</div>
+      <div class="tracker-label">Compliance Streak</div>
+      <div class="tracker-sub" id="nutri-comp-sub">Consecutive fully compliant days</div>
+    </div>
+    <div class="tracker-card">
+      <div class="tracker-num" style="color:var(--sage);" id="nutri-logged-count">0</div>
+      <div class="tracker-label">Days Logged</div>
+      <div class="tracker-sub">Total meal days tracked</div>
+    </div>
+  </div>
+
+  <!-- 3. Daily Meal Log -->
+  <div class="card" style="margin-bottom:20px;">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+      <div class="card-title" style="margin-bottom:0;">Log Meals</div>
+      <input type="date" class="form-input" id="nutri-date" style="width:auto;">
+    </div>
+    <div id="nutri-meal-forms"></div>
+    <div style="margin-top:16px;">
+      <button class="btn-primary" onclick="saveNutritionDay()">SAVE MEALS</button>
+    </div>
+  </div>
+
+  <!-- 4. History -->
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-title" style="margin-bottom:14px;">Meal History</div>
+    <div id="nutri-history"></div>
+    <div id="nutri-history-empty" class="empty-state" style="display:none;">
+      No meals logged yet. Start tracking your nutrition!
+    </div>
+  </div>
+
+  <!-- 5. Whole30 Rules Quick Reference -->
+  <div class="card">
+    <div class="card-title" style="margin-bottom:16px;">Whole30 Quick Reference</div>
+    <div class="rules-grid">
+      <div class="rules-col rules-yes">
+        <h4>Yes — Eat These</h4>
+        <ul>
+          <li>Meat &amp; poultry</li>
+          <li>Seafood &amp; fish</li>
+          <li>Eggs</li>
+          <li>Vegetables</li>
+          <li>Fruit (in moderation)</li>
+          <li>Natural fats (olive oil, ghee, coconut oil)</li>
+          <li>Nuts &amp; seeds</li>
+          <li>Herbs, spices &amp; seasonings</li>
+          <li>Potatoes &amp; sweet potatoes</li>
+          <li>Coffee (black)</li>
+        </ul>
+      </div>
+      <div class="rules-col rules-no">
+        <h4>No — Avoid These</h4>
+        <ul>
+          <li>Added sugar (real or artificial)</li>
+          <li>Alcohol (any form)</li>
+          <li>Grains (wheat, rice, oats, corn)</li>
+          <li>Legumes (beans, peanuts, soy)</li>
+          <li>Dairy (milk, cheese, yogurt)</li>
+          <li>Carrageenan, MSG, sulfites</li>
+          <li>Baked goods (even with compliant ingredients)</li>
+          <li>Pasta, bread, tortillas</li>
+          <li>Processed snack foods</li>
+        </ul>
+      </div>
+      <div class="rules-col rules-gray">
+        <h4>Gray Area — Use Sparingly</h4>
+        <ul>
+          <li>Fruit juice (as ingredient only)</li>
+          <li>Dried fruit</li>
+          <li>Compliant chips &amp; fries</li>
+          <li>Compliant pancakes or treats</li>
+          <li>Nut butters (check labels)</li>
+          <li>Larabars &amp; RXBARs</li>
+          <li>Coconut aminos</li>
+          <li>Store-bought dressings (read labels)</li>
+          <li>Smoothies (eat your food)</li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>
@@ -1086,9 +1343,18 @@ function load() {
       const parsed = JSON.parse(raw);
       data.workouts = parsed.workouts || [];
       data.weights = parsed.weights || [];
-      data.meals = parsed.meals || [];
       data.whole30Start = parsed.whole30Start || null;
       data.nodrinkStart = parsed.nodrinkStart || null;
+      // Migrate meals: old format { date, items:[] } → new { date, meals:{} }
+      const rawMeals = parsed.meals || [];
+      data.meals = rawMeals.map(m => {
+        if (m.meals) return m; // already new format
+        const meals = {};
+        if (m.items) {
+          m.items.forEach(name => { meals[name] = { desc: '', compliant: true, notes: '' }; });
+        }
+        return { date: m.date, meals };
+      });
     }
   } catch(e) {}
 }
@@ -1114,10 +1380,11 @@ function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
-  const idx = ['today','log','weight','weekly','monthly'].indexOf(id);
+  const idx = ['today','log','nutrition','weight','weekly','monthly'].indexOf(id);
   document.querySelectorAll('.tab-btn')[idx].classList.add('active');
   if (id === 'today') renderToday();
   if (id === 'log') renderLogTable();
+  if (id === 'nutrition') renderNutrition();
   if (id === 'weight') renderWeightPage();
   if (id === 'weekly') renderWeekly();
   if (id === 'monthly') renderMonthly();
@@ -1311,25 +1578,23 @@ function resetWhole30() {
   renderWhole30Tracker();
 }
 
-// --- Meal Check-In ---
-function getTodayMeals(dateStr) {
-  const entry = data.meals.find(m => m.date === dateStr);
-  return entry ? entry.items : [];
+// --- Meal Check-In (Today page — quick toggle) ---
+function getMealEntry(dateStr) {
+  return data.meals.find(m => m.date === dateStr);
 }
 
 function toggleMeal(dateStr, meal) {
-  let entry = data.meals.find(m => m.date === dateStr);
+  let entry = getMealEntry(dateStr);
   if (!entry) {
-    entry = { date: dateStr, items: [] };
+    entry = { date: dateStr, meals: {} };
     data.meals.push(entry);
   }
-  const idx = entry.items.indexOf(meal);
-  if (idx >= 0) {
-    entry.items.splice(idx, 1);
+  if (entry.meals[meal]) {
+    delete entry.meals[meal];
   } else {
-    entry.items.push(meal);
+    entry.meals[meal] = { desc: '', compliant: true, notes: '' };
   }
-  if (entry.items.length === 0) {
+  if (Object.keys(entry.meals).length === 0) {
     data.meals = data.meals.filter(m => m.date !== dateStr);
   }
   save();
@@ -1337,12 +1602,225 @@ function toggleMeal(dateStr, meal) {
 }
 
 function renderMealPills(dateStr) {
-  const checked = getTodayMeals(dateStr);
+  const entry = getMealEntry(dateStr);
+  const logged = entry ? Object.keys(entry.meals) : [];
   const container = document.getElementById('meal-pills');
   container.innerHTML = MEAL_OPTIONS.map(meal => {
-    const isChecked = checked.includes(meal);
+    const isChecked = logged.includes(meal);
     return `<div class="meal-pill${isChecked ? ' checked' : ''}" onclick="toggleMeal('${dateStr}','${meal}')"><span class="pill-check">${isChecked ? '&#10003;' : ''}</span>${meal}</div>`;
   }).join('');
+}
+
+// ===================== NUTRITION PAGE =====================
+let nutriDate = today();
+
+function renderNutrition() {
+  // Set date picker
+  document.getElementById('nutri-date').value = nutriDate;
+  document.getElementById('nutri-date').onchange = function() {
+    nutriDate = this.value;
+    renderNutriMealForms();
+  };
+
+  renderNutriW30Status();
+  renderNutriMealForms();
+  renderComplianceStreak();
+  renderNutriHistory();
+}
+
+// --- Whole30 status (detailed version) ---
+function renderNutriW30Status() {
+  const body = document.getElementById('nutri-w30-body');
+  if (data.whole30Start) {
+    const start = new Date(data.whole30Start + 'T00:00:00');
+    const diff = Math.floor((new Date() - start) / (1000 * 60 * 60 * 24));
+    const dayNum = Math.min(30, Math.max(1, diff + 1));
+    const completed = diff >= 30;
+    const endDate = new Date(start);
+    endDate.setDate(endDate.getDate() + 29);
+    const daysLeft = Math.max(0, 30 - dayNum);
+    const pct = Math.round((dayNum / 30) * 100);
+
+    if (completed) {
+      body.innerHTML = `
+        <div style="text-align:center;padding:12px 0;">
+          <div style="font-family:var(--font-display);font-size:48px;color:var(--green);">COMPLETE</div>
+          <div style="font-size:14px;color:var(--muted);margin:8px 0 16px;">You finished 30 days! Started ${fmt(data.whole30Start)}, ended ${fmt(endDate.toISOString().slice(0,10))}</div>
+          <button class="btn-sm" onclick="startWhole30();renderNutrition();">Start New Round</button>
+        </div>`;
+    } else {
+      body.innerHTML = `
+        <div class="grid-3" style="margin-bottom:14px;">
+          <div style="text-align:center;">
+            <div style="font-family:var(--font-display);font-size:42px;color:var(--green);">${dayNum}</div>
+            <div style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Day of 30</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-family:var(--font-display);font-size:42px;color:var(--sage);">${daysLeft}</div>
+            <div style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">Days left</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-family:var(--font-display);font-size:42px;color:var(--text);">${fmt(endDate.toISOString().slice(0,10))}</div>
+            <div style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;">End date</div>
+          </div>
+        </div>
+        <div class="goal-bar-track">
+          <div class="goal-bar-fill" style="width:${pct}%;background:var(--green);"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px;">
+          <span>Started ${fmt(data.whole30Start)}</span>
+          <span>${pct}%</span>
+        </div>
+        <div style="margin-top:12px;text-align:center;">
+          <button class="btn-sm btn-danger" onclick="resetWhole30();renderNutrition();">Reset Whole30</button>
+        </div>`;
+    }
+  } else {
+    body.innerHTML = `
+      <div style="text-align:center;padding:16px 0;">
+        <div style="font-size:14px;color:var(--muted);margin-bottom:12px;">No active Whole30. Ready to start?</div>
+        <button class="btn-sm" onclick="startWhole30();renderNutrition();">Start Whole30</button>
+      </div>`;
+  }
+}
+
+// --- Meal log forms ---
+function renderNutriMealForms() {
+  const entry = getMealEntry(nutriDate);
+  const meals = entry ? entry.meals : {};
+  const container = document.getElementById('nutri-meal-forms');
+  container.innerHTML = MEAL_OPTIONS.map(name => {
+    const m = meals[name] || { desc: '', compliant: true, notes: '' };
+    const hasContent = meals[name];
+    const compClass = hasContent ? (m.compliant ? 'compliant' : 'not-compliant') : '';
+    const compLabel = m.compliant ? '&#10003; Compliant' : '&#10007; Not Compliant';
+    return `<div class="meal-log-card">
+      <div class="meal-log-header">
+        <div class="meal-log-name">${name}</div>
+        <div class="compliance-toggle ${compClass}" onclick="toggleNutriCompliance('${name}', this)">
+          ${compLabel}
+        </div>
+      </div>
+      <textarea placeholder="What did you eat?" id="nutri-desc-${name}" oninput="autoSizeTextarea(this)">${m.desc}</textarea>
+      <div class="meal-notes">
+        <textarea placeholder="Notes (optional)" id="nutri-notes-${name}" oninput="autoSizeTextarea(this)">${m.notes}</textarea>
+      </div>
+    </div>`;
+  }).join('');
+  // Auto-size textareas on load
+  container.querySelectorAll('textarea').forEach(autoSizeTextarea);
+}
+
+function autoSizeTextarea(el) {
+  if (el.target) el = el.target;
+  el.style.height = 'auto';
+  el.style.height = Math.max(38, el.scrollHeight) + 'px';
+}
+
+function toggleNutriCompliance(name, el) {
+  const isCompliant = el.classList.contains('compliant');
+  el.classList.remove('compliant', 'not-compliant');
+  if (isCompliant) {
+    el.classList.add('not-compliant');
+    el.innerHTML = '&#10007; Not Compliant';
+  } else {
+    el.classList.add('compliant');
+    el.innerHTML = '&#10003; Compliant';
+  }
+}
+
+function saveNutritionDay() {
+  let entry = getMealEntry(nutriDate);
+  if (!entry) {
+    entry = { date: nutriDate, meals: {} };
+    data.meals.push(entry);
+  }
+  let hasAny = false;
+  MEAL_OPTIONS.forEach(name => {
+    const desc = document.getElementById('nutri-desc-' + name).value.trim();
+    const notes = document.getElementById('nutri-notes-' + name).value.trim();
+    const toggle = document.querySelector(`#nutri-meal-forms .meal-log-card:nth-child(${MEAL_OPTIONS.indexOf(name) + 1}) .compliance-toggle`);
+    const compliant = toggle.classList.contains('compliant');
+    if (desc || notes) {
+      entry.meals[name] = { desc, compliant, notes };
+      hasAny = true;
+    } else {
+      delete entry.meals[name];
+    }
+  });
+  if (!hasAny) {
+    data.meals = data.meals.filter(m => m.date !== nutriDate);
+  }
+  save();
+  showToast('Meals saved!');
+  renderComplianceStreak();
+  renderNutriHistory();
+  // Update logged count
+  document.getElementById('nutri-logged-count').textContent = data.meals.length;
+}
+
+// --- Compliance streak ---
+function calcComplianceStreak() {
+  if (data.meals.length === 0) return { streak: 0, since: null };
+  let streak = 0;
+  const d = new Date();
+  let checkDate = new Date(d);
+  const todayStr = today();
+  // If today has no meal entry, start checking from yesterday
+  if (!getMealEntry(todayStr)) {
+    checkDate.setDate(checkDate.getDate() - 1);
+  }
+  let sinceDate = null;
+  while (true) {
+    const ds = checkDate.toISOString().slice(0, 10);
+    const entry = getMealEntry(ds);
+    if (!entry || Object.keys(entry.meals).length === 0) break;
+    const allCompliant = Object.values(entry.meals).every(m => m.compliant);
+    if (!allCompliant) break;
+    streak++;
+    sinceDate = ds;
+    checkDate.setDate(checkDate.getDate() - 1);
+  }
+  return { streak, since: sinceDate };
+}
+
+function renderComplianceStreak() {
+  const { streak, since } = calcComplianceStreak();
+  document.getElementById('nutri-comp-streak').textContent = streak;
+  document.getElementById('nutri-comp-sub').textContent = since ? `Since ${fmt(since)}` : 'Consecutive fully compliant days';
+  document.getElementById('nutri-logged-count').textContent = data.meals.length;
+}
+
+// --- History ---
+function renderNutriHistory() {
+  const sorted = [...data.meals].sort((a, b) => b.date.localeCompare(a.date));
+  const histEl = document.getElementById('nutri-history');
+  const emptyEl = document.getElementById('nutri-history-empty');
+  if (sorted.length === 0) {
+    histEl.innerHTML = '';
+    emptyEl.style.display = 'block';
+    return;
+  }
+  emptyEl.style.display = 'none';
+  histEl.innerHTML = sorted.map(entry => {
+    const mealKeys = Object.keys(entry.meals);
+    if (mealKeys.length === 0) return '';
+    const allCompliant = Object.values(entry.meals).every(m => m.compliant);
+    const statusIcon = allCompliant ? '<span style="color:var(--green);">&#10003;</span>' : '<span style="color:var(--red);">&#10007;</span>';
+    const pills = MEAL_OPTIONS.map(name => {
+      const m = entry.meals[name];
+      if (!m) return `<span class="nutri-pill c-none">${name.slice(0, 1)}</span>`;
+      const cls = m.compliant ? 'c-yes' : 'c-no';
+      const icon = m.compliant ? '&#10003;' : '&#10007;';
+      const title = m.desc || name;
+      return `<span class="nutri-pill ${cls}" title="${title.replace(/"/g, '&quot;')}">${icon} ${name}</span>`;
+    }).join('');
+    return `<div class="nutri-day-row">
+      <div class="nutri-day-date">${fmt(entry.date)}</div>
+      <div class="nutri-day-pills">${pills}</div>
+      <div class="nutri-day-status">${statusIcon}</div>
+    </div>`;
+  }).filter(Boolean).join('');
 }
 
 function calcStreak() {
