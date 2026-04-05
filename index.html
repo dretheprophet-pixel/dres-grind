@@ -8,21 +8,23 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
   :root {
-    --bg0: #0a0a0a;
-    --bg1: #111111;
-    --bg2: #181818;
-    --bg3: #222222;
-    --bg4: #2a2a2a;
-    --border: rgba(255,255,255,0.08);
-    --border2: rgba(255,255,255,0.15);
-    --gold: #e8c84a;
-    --gold2: #f5d76e;
-    --red: #e85c4a;
-    --green: #4ade80;
-    --blue: #60a5fa;
-    --text: #f0ede8;
-    --muted: #888580;
-    --muted2: #555250;
+    --bg0: #f4f3f0;
+    --bg1: #ffffff;
+    --bg2: #f0efec;
+    --bg3: #e5e4e0;
+    --bg4: #d9d8d4;
+    --border: rgba(0,0,0,0.06);
+    --border2: rgba(0,0,0,0.12);
+    --sage: #7c9a82;
+    --sage2: #9ab8a0;
+    --sage-light: rgba(124,154,130,0.10);
+    --red: #c9514a;
+    --green: #4a9d6e;
+    --blue: #5b8db8;
+    --text: #1a1a1a;
+    --text2: #2d2d2d;
+    --muted: #6b7280;
+    --muted2: #9ca3af;
     --font-display: 'Bebas Neue', sans-serif;
     --font-cond: 'Barlow Condensed', sans-serif;
     --font-body: 'Barlow', sans-serif;
@@ -39,6 +41,7 @@
   nav {
     background: var(--bg1);
     border-bottom: 1px solid var(--border);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     padding: 0 28px;
     display: flex;
     align-items: center;
@@ -51,12 +54,12 @@
     font-family: var(--font-display);
     font-size: 26px;
     letter-spacing: 2px;
-    color: var(--gold);
+    color: var(--sage);
     padding: 14px 0;
     margin-right: 40px;
     flex-shrink: 0;
   }
-  .nav-brand span { color: var(--text); opacity: 0.5; }
+  .nav-brand span { color: var(--text); opacity: 0.35; }
   .nav-tabs { display: flex; gap: 4px; }
   .tab-btn {
     background: none;
@@ -73,7 +76,7 @@
     transition: all 0.2s;
   }
   .tab-btn:hover { color: var(--text); }
-  .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .tab-btn.active { color: var(--sage); border-bottom-color: var(--sage); }
   /* PAGES */
   .page { display: none; padding: 28px; max-width: 1100px; margin: 0 auto; }
   .page.active { display: block; }
@@ -96,8 +99,9 @@
   .card {
     background: var(--bg1);
     border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 20px;
+    border-radius: 12px;
+    padding: 22px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
   }
   .card-title {
     font-family: var(--font-cond);
@@ -134,7 +138,7 @@
     color: var(--text);
     line-height: 1;
   }
-  .today-day { font-family: var(--font-cond); font-size: 18px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 24px; }
+  .today-day { font-family: var(--font-cond); font-size: 18px; letter-spacing: 3px; text-transform: uppercase; color: var(--sage); margin-bottom: 24px; }
   .schedule-block {
     background: var(--bg2);
     border: 1px solid var(--border);
@@ -146,20 +150,20 @@
     margin-bottom: 10px;
   }
   .schedule-block.rest { border-left: 3px solid var(--muted2); opacity: 0.6; }
-  .schedule-block.workout { border-left: 3px solid var(--gold); }
+  .schedule-block.workout { border-left: 3px solid var(--sage); }
   .schedule-block.pilates { border-left: 3px solid var(--blue); }
-  .sched-time { font-family: var(--font-cond); font-size: 22px; font-weight: 600; color: var(--gold); min-width: 80px; }
+  .sched-time { font-family: var(--font-cond); font-size: 22px; font-weight: 600; color: var(--sage); min-width: 80px; }
   .sched-info h3 { font-family: var(--font-cond); font-size: 18px; font-weight: 600; letter-spacing: 0.5px; }
   .sched-info p { font-size: 13px; color: var(--muted); margin-top: 2px; }
   .streak-badge {
-    background: linear-gradient(135deg, #3d3010, #1a1500);
-    border: 1px solid var(--gold);
-    border-radius: 10px;
+    background: linear-gradient(135deg, #eef4ef, #dfeae1);
+    border: 1px solid var(--sage2);
+    border-radius: 12px;
     padding: 20px;
     text-align: center;
   }
-  .streak-num { font-family: var(--font-display); font-size: 64px; color: var(--gold); line-height: 1; }
-  .streak-lbl { font-family: var(--font-cond); font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--gold2); opacity: 0.8; }
+  .streak-num { font-family: var(--font-display); font-size: 64px; color: var(--sage); line-height: 1; }
+  .streak-lbl { font-family: var(--font-cond); font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--sage); opacity: 0.7; }
   /* GOAL BAR */
   .goal-bar-wrap { margin: 10px 0; }
   .goal-bar-track {
@@ -171,7 +175,7 @@
   }
   .goal-bar-fill {
     height: 100%;
-    background: linear-gradient(90deg, var(--gold), var(--green));
+    background: linear-gradient(90deg, var(--sage), var(--green));
     border-radius: 4px;
     transition: width 0.5s ease;
   }
@@ -200,7 +204,7 @@
     outline: none;
     transition: border-color 0.2s;
   }
-  .form-input:focus { border-color: var(--gold); }
+  .form-input:focus { border-color: var(--sage); }
   .form-select {
     width: 100%;
     background: var(--bg2);
@@ -217,7 +221,7 @@
     background-repeat: no-repeat;
     background-position: right 14px center;
   }
-  .form-select:focus { border-color: var(--gold); }
+  .form-select:focus { border-color: var(--sage); }
   .checkbox-group { display: flex; flex-wrap: wrap; gap: 8px; }
   .checkbox-pill {
     display: flex;
@@ -233,7 +237,7 @@
     font-size: 14px;
   }
   .checkbox-pill input { display: none; }
-  .checkbox-pill.checked { border-color: var(--gold); background: rgba(232,200,74,0.1); color: var(--gold); }
+  .checkbox-pill.checked { border-color: var(--sage); background: var(--sage-light); color: var(--sage); }
   /* RATING STARS */
   .rating-group { display: flex; gap: 6px; }
   .rating-btn {
@@ -249,12 +253,12 @@
     transition: all 0.2s;
     font-family: var(--font-cond);
   }
-  .rating-btn:hover { border-color: var(--gold); color: var(--gold); }
-  .rating-btn.active { background: var(--gold); border-color: var(--gold); color: #0a0a0a; }
+  .rating-btn:hover { border-color: var(--sage); color: var(--sage); }
+  .rating-btn.active { background: var(--sage); border-color: var(--sage); color: #ffffff; }
   /* PRIMARY BUTTON */
   .btn-primary {
-    background: var(--gold);
-    color: #0a0a0a;
+    background: var(--sage);
+    color: #ffffff;
     border: none;
     border-radius: 8px;
     padding: 13px 28px;
@@ -267,7 +271,7 @@
     transition: all 0.2s;
     width: 100%;
   }
-  .btn-primary:hover { background: var(--gold2); transform: translateY(-1px); }
+  .btn-primary:hover { background: var(--sage2); transform: translateY(-1px); }
   .btn-primary:active { transform: translateY(0); }
   .btn-ghost {
     background: transparent;
@@ -289,8 +293,8 @@
     position: fixed;
     bottom: 28px;
     right: 28px;
-    background: var(--gold);
-    color: #0a0a0a;
+    background: var(--sage);
+    color: #ffffff;
     padding: 14px 22px;
     border-radius: 8px;
     font-family: var(--font-cond);
@@ -299,6 +303,7 @@
     letter-spacing: 1px;
     display: none;
     z-index: 999;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.10);
     animation: toastIn 0.3s ease;
   }
   @keyframes toastIn { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
@@ -321,10 +326,10 @@
     position: relative;
     cursor: default;
   }
-  .heat-day.done { background: rgba(232,200,74,0.7); color: #1a1200; }
-  .heat-day.partial { background: rgba(232,200,74,0.3); color: var(--muted); }
+  .heat-day.done { background: rgba(124,154,130,0.65); color: #ffffff; }
+  .heat-day.partial { background: rgba(124,154,130,0.25); color: var(--muted); }
   .heat-day.rest-day { background: var(--bg2); color: var(--muted2); font-style: italic; }
-  .heat-day.today { outline: 2px solid var(--gold); outline-offset: 1px; }
+  .heat-day.today { outline: 2px solid var(--sage); outline-offset: 1px; }
   .heat-day-label { font-family: var(--font-cond); font-size: 11px; color: var(--muted2); text-align: center; letter-spacing: 0.5px; margin-bottom: 4px; }
   .heatmap-days-header { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 8px; }
   /* LOG TABLE */
@@ -358,11 +363,11 @@
     letter-spacing: 0.5px;
     margin-right: 4px;
   }
-  .badge-strength { background: rgba(232,200,74,0.15); color: var(--gold); }
-  .badge-core { background: rgba(96,165,250,0.15); color: var(--blue); }
-  .badge-boxing { background: rgba(232,92,74,0.15); color: var(--red); }
-  .badge-pilates { background: rgba(74,222,128,0.15); color: var(--green); }
-  .badge-cooldown { background: rgba(160,130,255,0.15); color: #a082ff; }
+  .badge-strength { background: rgba(124,154,130,0.12); color: var(--sage); }
+  .badge-core { background: rgba(91,141,184,0.12); color: var(--blue); }
+  .badge-boxing { background: rgba(201,81,74,0.12); color: var(--red); }
+  .badge-pilates { background: rgba(74,157,110,0.12); color: var(--green); }
+  .badge-cooldown { background: rgba(130,110,210,0.12); color: #7060c0; }
   /* WEIGHT ENTRY LIST */
   .weight-entry {
     display: flex;
@@ -394,7 +399,7 @@
     justify-content: center;
     transition: all 0.2s;
   }
-  .month-nav button:hover { border-color: var(--gold); color: var(--gold); }
+  .month-nav button:hover { border-color: var(--sage); color: var(--sage); }
   .month-nav h3 { font-family: var(--font-display); font-size: 28px; letter-spacing: 2px; }
   /* ENERGY LABELS */
   .energy-group { display: flex; gap: 8px; }
@@ -414,9 +419,9 @@
     text-transform: uppercase;
   }
   .energy-btn:hover { border-color: var(--text); color: var(--text); }
-  .energy-btn.active-low { background: rgba(232,92,74,0.15); border-color: var(--red); color: var(--red); }
-  .energy-btn.active-med { background: rgba(232,200,74,0.15); border-color: var(--gold); color: var(--gold); }
-  .energy-btn.active-high { background: rgba(74,222,128,0.15); border-color: var(--green); color: var(--green); }
+  .energy-btn.active-low { background: rgba(201,81,74,0.10); border-color: var(--red); color: var(--red); }
+  .energy-btn.active-med { background: rgba(124,154,130,0.10); border-color: var(--sage); color: var(--sage); }
+  .energy-btn.active-high { background: rgba(74,157,110,0.10); border-color: var(--green); color: var(--green); }
   /* DIVIDER */
   .divider { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
   /* EMPTY STATE */
@@ -475,7 +480,7 @@
     </div>
     <div class="card">
       <div class="card-title">To Go</div>
-      <div class="stat-val" id="td-togo" style="color:var(--gold);">—</div>
+      <div class="stat-val" id="td-togo" style="color:var(--sage);">—</div>
       <div class="stat-label">lbs remaining</div>
     </div>
     <div class="card">
@@ -624,7 +629,7 @@
         </div>
         <div>
           <div style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">To Goal</div>
-          <div style="font-family:var(--font-display);font-size:36px;color:var(--gold);" id="w-togo">—</div>
+          <div style="font-family:var(--font-display);font-size:36px;color:var(--sage);" id="w-togo">—</div>
         </div>
       </div>
     </div>
@@ -741,7 +746,7 @@
     <div class="heatmap-days-header" id="heatmap-header"></div>
     <div class="heatmap-grid" id="heatmap-grid"></div>
     <div style="display:flex;gap:16px;margin-top:14px;align-items:center;font-size:12px;color:var(--muted);">
-      <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:2px;background:rgba(232,200,74,0.7);display:inline-block;"></span>Workout done</span>
+      <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:2px;background:rgba(124,154,130,0.65);display:inline-block;"></span>Workout done</span>
       <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:2px;background:var(--bg2);display:inline-block;border:1px solid var(--border);"></span>Rest day</span>
       <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:2px;background:var(--bg3);display:inline-block;"></span>Missed</span>
     </div>
@@ -853,12 +858,12 @@ function getWeekDates(weekStart) {
 }
 function effortBar(n) {
   const filled = '█'.repeat(n) + '░'.repeat(5 - n);
-  return `<span style="font-family:var(--font-mono,monospace);letter-spacing:1px;color:var(--gold);font-size:12px;">${filled}</span> ${n}/5`;
+  return `<span style="font-family:var(--font-mono,monospace);letter-spacing:1px;color:var(--sage);font-size:12px;">${filled}</span> ${n}/5`;
 }
 function energyColor(e) {
   if (e === 'Low') return 'var(--red)';
   if (e === 'High') return 'var(--green)';
-  return 'var(--gold)';
+  return 'var(--sage)';
 }
 function getTypeBadge(type) {
   const map = { Strength:'strength', Core:'core', Boxing:'boxing', Pilates:'pilates', Cooldown:'cooldown' };
@@ -1076,9 +1081,9 @@ function renderWeightPage() {
           {
             label: 'Weight',
             data: vals,
-            borderColor: '#e8c84a',
-            backgroundColor: 'rgba(232,200,74,0.1)',
-            pointBackgroundColor: '#e8c84a',
+            borderColor: '#7c9a82',
+            backgroundColor: 'rgba(124,154,130,0.08)',
+            pointBackgroundColor: '#7c9a82',
             pointRadius: 5,
             tension: 0.3,
             fill: false,
@@ -1086,7 +1091,7 @@ function renderWeightPage() {
           {
             label: 'Goal (205)',
             data: goalLine,
-            borderColor: '#4ade80',
+            borderColor: '#4a9d6e',
             borderDash: [6, 4],
             pointRadius: 0,
             tension: 0,
@@ -1099,10 +1104,10 @@ function renderWeightPage() {
         responsive: true, maintainAspectRatio: false,
         plugins: { legend: { display: false } },
         scales: {
-          x: { ticks: { color: '#888580', font: { size: 11 } }, grid: { color: 'rgba(255,255,255,0.05)' } },
+          x: { ticks: { color: '#6b7280', font: { size: 11 } }, grid: { color: 'rgba(0,0,0,0.05)' } },
           y: {
-            ticks: { color: '#888580', font: { size: 11 }, callback: v => v + ' lbs' },
-            grid: { color: 'rgba(255,255,255,0.05)' },
+            ticks: { color: '#6b7280', font: { size: 11 }, callback: v => v + ' lbs' },
+            grid: { color: 'rgba(0,0,0,0.05)' },
             min: Math.max(180, Math.min(...vals) - 5),
             max: Math.min(260, Math.max(...vals, 224) + 5),
           }
@@ -1173,24 +1178,24 @@ function renderWeekly() {
     if (REST_DAYS.includes(dow)) return null;
     return data.workouts.some(w => w.date === d) ? 1 : 0;
   });
-  const compColors = compData.map(v => v === null ? '#2a2a2a' : v === 1 ? '#e8c84a' : '#3a3a3a');
+  const compColors = compData.map(v => v === null ? '#e5e4e0' : v === 1 ? '#7c9a82' : '#d9d8d4');
   wkCompChart = new Chart(document.getElementById('week-completion-chart'), {
     type: 'bar',
     data: { labels: compLabels, datasets: [{ data: compData.map(v => v === null ? 0.3 : v || 0.05), backgroundColor: compColors, borderRadius: 6, borderSkipped: false }] },
     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
-      scales: { x: { ticks: { color: '#888580' }, grid: { display: false } }, y: { display: false, max: 1.2 } } }
+      scales: { x: { ticks: { color: '#6b7280' }, grid: { display: false } }, y: { display: false, max: 1.2 } } }
   });
 
   // Type breakdown
   if (wkTypeChart) { wkTypeChart.destroy(); }
   const typeCounts = {};
   wkWorkouts.forEach(w => w.types.forEach(t => typeCounts[t] = (typeCounts[t]||0)+1));
-  const typeColors = { Strength:'#e8c84a', Core:'#60a5fa', Boxing:'#e85c4a', Pilates:'#4ade80', Cooldown:'#a082ff' };
+  const typeColors = { Strength:'#7c9a82', Core:'#5b8db8', Boxing:'#c9514a', Pilates:'#4a9d6e', Cooldown:'#7060c0' };
   if (Object.keys(typeCounts).length > 0) {
     wkTypeChart = new Chart(document.getElementById('week-type-chart'), {
       type: 'doughnut',
       data: { labels: Object.keys(typeCounts), datasets: [{ data: Object.values(typeCounts), backgroundColor: Object.keys(typeCounts).map(t => typeColors[t]||'#888'), borderWidth: 0 }] },
-      options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { position: 'bottom', labels: { color: '#888580', font: { size: 12 }, padding: 12, boxWidth: 10 } } } }
+      options: { responsive: true, maintainAspectRatio: false, cutout: '65%', plugins: { legend: { position: 'bottom', labels: { color: '#6b7280', font: { size: 12 }, padding: 12, boxWidth: 10 } } } }
     });
   }
 
@@ -1204,9 +1209,9 @@ function renderWeekly() {
   if (effortLabels.length > 0) {
     wkEffortChart = new Chart(document.getElementById('week-effort-chart'), {
       type: 'line',
-      data: { labels: effortLabels, datasets: [{ label:'Effort', data: effortData, borderColor:'#e8c84a', backgroundColor:'rgba(232,200,74,0.1)', pointBackgroundColor:'#e8c84a', pointRadius:6, tension:0.3, fill:true }] },
+      data: { labels: effortLabels, datasets: [{ label:'Effort', data: effortData, borderColor:'#7c9a82', backgroundColor:'rgba(124,154,130,0.08)', pointBackgroundColor:'#7c9a82', pointRadius:6, tension:0.3, fill:true }] },
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
-        scales: { x: { ticks: { color: '#888580' }, grid: { color: 'rgba(255,255,255,0.05)' } }, y: { min: 0, max: 5, ticks: { color: '#888580', stepSize: 1 }, grid: { color: 'rgba(255,255,255,0.05)' } } } }
+        scales: { x: { ticks: { color: '#6b7280' }, grid: { color: 'rgba(0,0,0,0.05)' } }, y: { min: 0, max: 5, ticks: { color: '#6b7280', stepSize: 1 }, grid: { color: 'rgba(0,0,0,0.05)' } } } }
     });
   }
 
@@ -1220,9 +1225,9 @@ function renderWeekly() {
   if (calLabels.length > 0) {
     wkCalChart = new Chart(document.getElementById('week-cal-chart'), {
       type: 'bar',
-      data: { labels: calLabels, datasets: [{ data: calData, backgroundColor: '#e85c4a99', borderColor: '#e85c4a', borderWidth: 1.5, borderRadius: 6, borderSkipped: false }] },
+      data: { labels: calLabels, datasets: [{ data: calData, backgroundColor: 'rgba(201,81,74,0.18)', borderColor: '#c9514a', borderWidth: 1.5, borderRadius: 6, borderSkipped: false }] },
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
-        scales: { x: { ticks: { color: '#888580' }, grid: { display: false } }, y: { ticks: { color: '#888580', callback: v => v.toLocaleString() + ' kcal' }, grid: { color: 'rgba(255,255,255,0.05)' }, beginAtZero: true } } }
+        scales: { x: { ticks: { color: '#6b7280' }, grid: { display: false } }, y: { ticks: { color: '#6b7280', callback: v => v.toLocaleString() + ' kcal' }, grid: { color: 'rgba(0,0,0,0.05)' }, beginAtZero: true } } }
     });
   }
 }
@@ -1293,11 +1298,11 @@ function renderMonthly() {
     moWeightChart = new Chart(document.getElementById('mo-weight-chart'), {
       type: 'line',
       data: { labels: wLabels, datasets: [
-        { label:'Weight', data: wVals, borderColor:'#e8c84a', backgroundColor:'rgba(232,200,74,0.1)', pointBackgroundColor:'#e8c84a', pointRadius:5, tension:0.3, fill:true },
-        { label:'Goal', data: Array(wVals.length).fill(205), borderColor:'#4ade80', borderDash:[6,4], pointRadius:0, borderWidth:1.5, fill:false }
+        { label:'Weight', data: wVals, borderColor:'#7c9a82', backgroundColor:'rgba(124,154,130,0.08)', pointBackgroundColor:'#7c9a82', pointRadius:5, tension:0.3, fill:true },
+        { label:'Goal', data: Array(wVals.length).fill(205), borderColor:'#4a9d6e', borderDash:[6,4], pointRadius:0, borderWidth:1.5, fill:false }
       ]},
       options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
-        scales:{ x:{ticks:{color:'#888580',font:{size:10}},grid:{color:'rgba(255,255,255,0.05)'}}, y:{ticks:{color:'#888580',callback:v=>v+' lbs'},grid:{color:'rgba(255,255,255,0.05)'},min:Math.max(180,Math.min(...wVals)-3),max:Math.min(260,Math.max(...wVals,224)+3) } } }
+        scales:{ x:{ticks:{color:'#6b7280',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}}, y:{ticks:{color:'#6b7280',callback:v=>v+' lbs'},grid:{color:'rgba(0,0,0,0.05)'},min:Math.max(180,Math.min(...wVals)-3),max:Math.min(260,Math.max(...wVals,224)+3) } } }
     });
   }
 
@@ -1305,12 +1310,12 @@ function renderMonthly() {
   if (moTypeChart) { moTypeChart.destroy(); }
   const typeCounts = {};
   moWorkouts.forEach(w => w.types.forEach(t => typeCounts[t] = (typeCounts[t]||0)+1));
-  const typeColors = { Strength:'#e8c84a', Core:'#60a5fa', Boxing:'#e85c4a', Pilates:'#4ade80', Cooldown:'#a082ff' };
+  const typeColors = { Strength:'#7c9a82', Core:'#5b8db8', Boxing:'#c9514a', Pilates:'#4a9d6e', Cooldown:'#7060c0' };
   if (Object.keys(typeCounts).length > 0) {
     moTypeChart = new Chart(document.getElementById('mo-type-chart'), {
       type: 'doughnut',
       data: { labels: Object.keys(typeCounts), datasets: [{ data: Object.values(typeCounts), backgroundColor: Object.keys(typeCounts).map(t => typeColors[t]||'#888'), borderWidth:0 }] },
-      options: { responsive:true, maintainAspectRatio:false, cutout:'65%', plugins:{legend:{position:'bottom',labels:{color:'#888580',font:{size:12},padding:12,boxWidth:10}}} }
+      options: { responsive:true, maintainAspectRatio:false, cutout:'65%', plugins:{legend:{position:'bottom',labels:{color:'#6b7280',font:{size:12},padding:12,boxWidth:10}}} }
     });
   }
 
@@ -1322,9 +1327,9 @@ function renderMonthly() {
   if (eLabels.length > 0) {
     moEffortChart = new Chart(document.getElementById('mo-effort-chart'), {
       type: 'bar',
-      data: { labels: eLabels, datasets: [{ data: eData, backgroundColor: eData.map(v => v >= 4 ? '#e8c84a' : v >= 3 ? '#f5d76e88' : '#60a5fa55'), borderRadius:6, borderSkipped:false }] },
+      data: { labels: eLabels, datasets: [{ data: eData, backgroundColor: eData.map(v => v >= 4 ? '#7c9a82' : v >= 3 ? 'rgba(124,154,130,0.45)' : 'rgba(91,141,184,0.35)'), borderRadius:6, borderSkipped:false }] },
       options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
-        scales:{ x:{ticks:{color:'#888580',font:{size:10}},grid:{display:false}}, y:{min:0,max:5,ticks:{color:'#888580',stepSize:1},grid:{color:'rgba(255,255,255,0.05)'}} } }
+        scales:{ x:{ticks:{color:'#6b7280',font:{size:10}},grid:{display:false}}, y:{min:0,max:5,ticks:{color:'#6b7280',stepSize:1},grid:{color:'rgba(0,0,0,0.05)'}} } }
     });
   }
 
@@ -1335,9 +1340,9 @@ function renderMonthly() {
   if (cLabels.length > 0) {
     moCalChart = new Chart(document.getElementById('mo-cal-chart'), {
       type: 'bar',
-      data: { labels: cLabels, datasets: [{ data: cData, backgroundColor: '#e85c4a99', borderColor: '#e85c4a', borderWidth: 1.5, borderRadius: 6, borderSkipped: false }] },
+      data: { labels: cLabels, datasets: [{ data: cData, backgroundColor: 'rgba(201,81,74,0.18)', borderColor: '#c9514a', borderWidth: 1.5, borderRadius: 6, borderSkipped: false }] },
       options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
-        scales:{ x:{ticks:{color:'#888580',font:{size:10}},grid:{display:false}}, y:{beginAtZero:true, ticks:{color:'#888580',callback: v => v.toLocaleString()+' kcal'},grid:{color:'rgba(255,255,255,0.05)'}} } }
+        scales:{ x:{ticks:{color:'#6b7280',font:{size:10}},grid:{display:false}}, y:{beginAtZero:true, ticks:{color:'#6b7280',callback: v => v.toLocaleString()+' kcal'},grid:{color:'rgba(0,0,0,0.05)'}} } }
     });
   }
 }
