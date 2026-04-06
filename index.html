@@ -1051,6 +1051,64 @@
   }
   .shop-name { font-size: 14px; color: var(--text2); flex: 1; }
   .shop-qty { font-size: 13px; color: var(--muted); white-space: nowrap; }
+  /* WEIGHT MILESTONES */
+  .milestone-track {
+    position: relative;
+    height: 16px;
+    background: var(--bg3);
+    border-radius: 8px;
+    margin: 28px 0 10px;
+  }
+  .milestone-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--sage), var(--green));
+    border-radius: 8px;
+    transition: width 0.5s ease;
+    position: relative;
+    min-width: 0;
+  }
+  .milestone-markers {
+    position: relative;
+    height: 0;
+  }
+  .milestone-marker {
+    position: absolute;
+    top: -40px;
+    transform: translateX(-50%);
+    text-align: center;
+  }
+  .milestone-marker .mm-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid var(--bg3);
+    background: var(--bg1);
+    margin: 0 auto 4px;
+    transition: all 0.3s;
+  }
+  .milestone-marker.reached .mm-dot {
+    background: var(--green);
+    border-color: var(--green);
+  }
+  .milestone-marker.next .mm-dot {
+    border-color: var(--sage);
+  }
+  .milestone-marker .mm-label {
+    font-family: var(--font-cond);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--muted2);
+    white-space: nowrap;
+  }
+  .milestone-marker.reached .mm-label { color: var(--green); }
+  .milestone-marker.next .mm-label { color: var(--sage); font-weight: 700; }
+  .milestone-next-hint {
+    font-size: 13px;
+    color: var(--sage);
+    font-weight: 500;
+    margin-top: 8px;
+  }
   /* RESPONSIVE tweaks */
   @media (max-width: 768px) {
     .grid-4 { grid-template-columns: repeat(2, 1fr); }
@@ -1152,7 +1210,7 @@
 
   <!-- 4. Weight Snapshot -->
   <div class="card" style="margin-bottom:20px;">
-    <div class="card-title" style="margin-bottom:14px;">Weight — 224 → 205 lbs</div>
+    <div class="card-title" style="margin-bottom:14px;" id="td-weight-title">Weight</div>
     <div class="weight-snap">
       <div class="weight-snap-stat">
         <div class="weight-snap-num" id="td-weight">—</div>
@@ -1167,9 +1225,9 @@
           <div class="goal-bar-fill" id="goal-bar" style="width:0%"></div>
         </div>
         <div class="goal-nums" style="margin-top:6px;">
-          <span>224 lbs</span>
+          <span id="td-ws-start"></span>
           <span id="goal-pct-label">0%</span>
-          <span>205 lbs</span>
+          <span id="td-ws-goal"></span>
         </div>
       </div>
     </div>
@@ -1459,7 +1517,7 @@
 <!-- ===================== WEIGHT ===================== -->
 <div id="page-weight" class="page">
   <div class="section-title">Weight Check-In</div>
-  <div class="section-sub">Weekly weigh-ins — Sunday mornings recommended</div>
+  <div class="section-sub" id="w-subtitle">Target: 205 lbs by San Diego — May 23, 2026</div>
 
   <div class="grid-2">
     <div class="card">
@@ -1476,31 +1534,41 @@
 
     <div class="card">
       <div class="card-title">Stats</div>
-      <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:8px;">
-        <div>
+      <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:12px; margin-top:8px;">
+        <div style="text-align:center;">
           <div style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">Current</div>
-          <div style="font-family:var(--font-display);font-size:36px;color:var(--text);" id="w-current">—</div>
+          <div style="font-family:var(--font-display);font-size:32px;color:var(--text);" id="w-current">—</div>
         </div>
-        <div>
+        <div style="text-align:center;">
           <div style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">Start</div>
-          <div style="font-family:var(--font-display);font-size:36px;color:var(--muted);">224</div>
+          <div style="font-family:var(--font-display);font-size:32px;color:var(--muted);" id="w-start">224</div>
         </div>
-        <div>
-          <div style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">Total Lost</div>
-          <div style="font-family:var(--font-display);font-size:36px;color:var(--green);" id="w-lost">—</div>
+        <div style="text-align:center;">
+          <div style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">Lost</div>
+          <div style="font-family:var(--font-display);font-size:32px;color:var(--green);" id="w-lost">—</div>
         </div>
-        <div>
-          <div style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">To Goal</div>
-          <div style="font-family:var(--font-display);font-size:36px;color:var(--sage);" id="w-togo">—</div>
+        <div style="text-align:center;">
+          <div style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">To San Diego</div>
+          <div style="font-family:var(--font-display);font-size:32px;color:var(--sage);" id="w-togo">—</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:11px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;">Days Left</div>
+          <div style="font-family:var(--font-display);font-size:32px;color:var(--blue);" id="w-daysleft">—</div>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Milestone Progress -->
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-title" style="margin-bottom:4px;">Milestones</div>
+    <div id="w-milestone-track"></div>
+  </div>
+
   <!-- Weight chart -->
   <div class="card" style="margin-bottom:20px;">
     <div class="card-title" style="margin-bottom:14px;">Weight Trend</div>
-    <div class="chart-wrap" style="height:260px;">
+    <div class="chart-wrap" style="height:280px;">
       <canvas id="weight-chart"></canvas>
     </div>
   </div>
@@ -1762,6 +1830,9 @@ function getTypeBadge(type) {
 
 // ===================== TODAY PAGE =====================
 const WEDDING_DATE = new Date('2026-05-23T00:00:00');
+const WEIGHT_START = 224;
+const WEIGHT_GOAL = 205;
+const WEIGHT_MILESTONES = [220, 215, 210, 205];
 const MEAL_OPTIONS = ['Breakfast', 'Lunch', 'Dinner', 'Snacks'];
 
 function renderToday() {
@@ -1811,12 +1882,15 @@ function renderToday() {
   renderMealPills(todayStr);
 
   // --- 4. Weight Snapshot ---
+  document.getElementById('td-weight-title').textContent = `Weight — ${WEIGHT_START} → ${WEIGHT_GOAL} lbs`;
+  document.getElementById('td-ws-start').textContent = WEIGHT_START + ' lbs';
+  document.getElementById('td-ws-goal').textContent = WEIGHT_GOAL + ' lbs';
   const latest = getLatestWeight();
   if (latest) {
     document.getElementById('td-weight').textContent = latest.toFixed(1);
-    const togo = Math.max(0, latest - 205);
+    const togo = Math.max(0, latest - WEIGHT_GOAL);
     document.getElementById('td-togo').textContent = togo.toFixed(1);
-    const pct = Math.min(100, Math.round(((224 - latest) / (224 - 205)) * 100));
+    const pct = Math.min(100, Math.round(((WEIGHT_START - latest) / (WEIGHT_START - WEIGHT_GOAL)) * 100));
     document.getElementById('goal-bar').style.width = Math.max(0, pct) + '%';
     document.getElementById('goal-pct-label').textContent = Math.max(0, pct) + '%';
   } else {
@@ -2697,66 +2771,30 @@ function renderWeightPage() {
   const sorted = [...data.weights].sort((a,b) => a.date.localeCompare(b.date));
   const latest = sorted.length ? sorted[sorted.length-1].weight : null;
 
+  // Subtitle
+  document.getElementById('w-subtitle').textContent = `Target: ${WEIGHT_GOAL} lbs by San Diego — May 23, 2026`;
+  document.getElementById('w-start').textContent = WEIGHT_START;
+
+  // Days left
+  const daysLeft = Math.max(0, Math.ceil((WEDDING_DATE - new Date()) / (1000 * 60 * 60 * 24)));
+  document.getElementById('w-daysleft').textContent = daysLeft;
+
+  // Stats
   document.getElementById('w-current').textContent = latest ? latest.toFixed(1) : '—';
   if (latest) {
-    const lost = 224 - latest;
+    const lost = WEIGHT_START - latest;
     document.getElementById('w-lost').textContent = lost > 0 ? lost.toFixed(1) : '0';
-    document.getElementById('w-togo').textContent = Math.max(0, latest - 205).toFixed(1);
+    document.getElementById('w-togo').textContent = Math.max(0, latest - WEIGHT_GOAL).toFixed(1);
   } else {
     document.getElementById('w-lost').textContent = '—';
     document.getElementById('w-togo').textContent = '—';
   }
 
+  // Milestones
+  renderWeightMilestones(latest);
+
   // Chart
-  if (weightChart) { weightChart.destroy(); weightChart = null; }
-  const canvas = document.getElementById('weight-chart');
-  if (sorted.length > 0) {
-    const labels = sorted.map(w => fmt(w.date));
-    const vals = sorted.map(w => w.weight);
-    // Add goal line
-    const goalLine = Array(sorted.length).fill(205);
-    weightChart = new Chart(canvas, {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [
-          {
-            label: 'Weight',
-            data: vals,
-            borderColor: '#7c9a82',
-            backgroundColor: 'rgba(124,154,130,0.08)',
-            pointBackgroundColor: '#7c9a82',
-            pointRadius: 5,
-            tension: 0.3,
-            fill: false,
-          },
-          {
-            label: 'Goal (205)',
-            data: goalLine,
-            borderColor: '#4a9d6e',
-            borderDash: [6, 4],
-            pointRadius: 0,
-            tension: 0,
-            fill: false,
-            borderWidth: 1.5,
-          }
-        ]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: {
-          x: { ticks: { color: '#6b7280', font: { size: 11 } }, grid: { color: 'rgba(0,0,0,0.05)' } },
-          y: {
-            ticks: { color: '#6b7280', font: { size: 11 }, callback: v => v + ' lbs' },
-            grid: { color: 'rgba(0,0,0,0.05)' },
-            min: Math.max(180, Math.min(...vals) - 5),
-            max: Math.min(260, Math.max(...vals, 224) + 5),
-          }
-        }
-      }
-    });
-  }
+  renderWeightChart(sorted);
 
   // History list
   const listEl = document.getElementById('weight-list');
@@ -2787,6 +2825,161 @@ function renderWeightPage() {
       </div>
     </div>`;
   }).join('');
+}
+
+function renderWeightMilestones(currentWeight) {
+  const container = document.getElementById('w-milestone-track');
+  const range = WEIGHT_START - WEIGHT_GOAL; // 19
+  const progress = currentWeight ? Math.max(0, Math.min(range, WEIGHT_START - currentWeight)) : 0;
+  const pct = Math.round((progress / range) * 100);
+
+  // Find next milestone
+  let nextMilestone = null;
+  let nextAway = null;
+  if (currentWeight) {
+    for (let i = 0; i < WEIGHT_MILESTONES.length; i++) {
+      if (currentWeight > WEIGHT_MILESTONES[i]) {
+        nextMilestone = WEIGHT_MILESTONES[i];
+        nextAway = (currentWeight - WEIGHT_MILESTONES[i]).toFixed(1);
+        break;
+      }
+    }
+  }
+
+  // Build markers
+  const markers = WEIGHT_MILESTONES.map(m => {
+    const mPct = ((WEIGHT_START - m) / range) * 100;
+    const reached = currentWeight !== null && currentWeight <= m;
+    const isNext = m === nextMilestone;
+    const cls = reached ? 'reached' : isNext ? 'next' : '';
+    return `<div class="milestone-marker ${cls}" style="left:${mPct}%;">
+      <div class="mm-dot">${reached ? '<span style="color:#fff;font-size:9px;line-height:10px;">&#10003;</span>' : ''}</div>
+      <div class="mm-label">${m}</div>
+    </div>`;
+  }).join('');
+
+  const hintHtml = nextMilestone && nextAway
+    ? `<div class="milestone-next-hint">Next milestone: ${nextMilestone} lbs — ${nextAway} lbs away</div>`
+    : currentWeight && currentWeight <= WEIGHT_GOAL
+      ? `<div class="milestone-next-hint" style="color:var(--green);font-weight:600;">Goal reached!</div>`
+      : '';
+
+  const pctLabel = pct > 8 ? `<span style="position:absolute;right:6px;top:50%;transform:translateY(-50%);font-family:var(--font-cond);font-size:10px;font-weight:700;color:#fff;letter-spacing:0.5px;">${pct}%</span>` : '';
+  container.innerHTML = `
+    <div class="milestone-track" style="position:relative;">
+      <div class="milestone-fill" style="width:${pct}%;">${pctLabel}</div>
+    </div>
+    <div class="milestone-markers">${markers}</div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted2);margin-top:4px;">
+      <span>${WEIGHT_START} lbs</span>
+      <span>${WEIGHT_GOAL} lbs</span>
+    </div>
+    ${hintHtml}`;
+}
+
+function renderWeightChart(sorted) {
+  if (weightChart) { weightChart.destroy(); weightChart = null; }
+  const canvas = document.getElementById('weight-chart');
+  if (sorted.length === 0) return;
+
+  const labels = sorted.map(w => fmt(w.date));
+  const vals = sorted.map(w => w.weight);
+
+  // Goal line
+  const goalLine = Array(sorted.length).fill(WEIGHT_GOAL);
+
+  // San Diego pace line: linear from first weigh-in to WEIGHT_GOAL at wedding date
+  const firstDate = new Date(sorted[0].date + 'T12:00:00');
+  const totalPaceDays = Math.max(1, (WEDDING_DATE - firstDate) / (1000 * 60 * 60 * 24));
+  const firstWeight = sorted[0].weight;
+  const paceData = sorted.map(w => {
+    const d = new Date(w.date + 'T12:00:00');
+    const elapsed = (d - firstDate) / (1000 * 60 * 60 * 24);
+    const ratio = Math.min(1, elapsed / totalPaceDays);
+    return firstWeight - (firstWeight - WEIGHT_GOAL) * ratio;
+  });
+
+  // Milestone reference lines as datasets
+  const milestoneDatasets = WEIGHT_MILESTONES.filter(m => m !== WEIGHT_GOAL).map(m => ({
+    label: m + ' lbs',
+    data: Array(sorted.length).fill(m),
+    borderColor: 'rgba(0,0,0,0.06)',
+    borderDash: [3, 6],
+    pointRadius: 0,
+    borderWidth: 1,
+    tension: 0,
+    fill: false,
+  }));
+
+  weightChart = new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Weight',
+          data: vals,
+          borderColor: '#7c9a82',
+          backgroundColor: 'rgba(124,154,130,0.06)',
+          pointBackgroundColor: '#7c9a82',
+          pointRadius: 5,
+          tension: 0.3,
+          fill: true,
+          borderWidth: 2.5,
+        },
+        {
+          label: 'San Diego Pace',
+          data: paceData,
+          borderColor: '#d4914a',
+          backgroundColor: 'transparent',
+          borderDash: [4, 4],
+          pointRadius: 0,
+          tension: 0,
+          fill: false,
+          borderWidth: 2,
+        },
+        {
+          label: 'Goal (' + WEIGHT_GOAL + ')',
+          data: goalLine,
+          borderColor: '#4a9d6e',
+          borderDash: [6, 4],
+          pointRadius: 0,
+          tension: 0,
+          fill: false,
+          borderWidth: 1.5,
+        },
+        ...milestoneDatasets
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          position: 'bottom',
+          labels: {
+            color: '#6b7280',
+            font: { size: 11, family: 'Barlow Condensed' },
+            padding: 14,
+            boxWidth: 12,
+            filter: function(item) {
+              // Only show Weight, Pace, and Goal in legend
+              return ['Weight', 'San Diego Pace', 'Goal (' + WEIGHT_GOAL + ')'].includes(item.text);
+            }
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#6b7280', font: { size: 11 } }, grid: { color: 'rgba(0,0,0,0.05)' } },
+        y: {
+          ticks: { color: '#6b7280', font: { size: 11 }, callback: v => v + ' lbs' },
+          grid: { color: 'rgba(0,0,0,0.05)' },
+          min: Math.max(180, Math.min(...vals, WEIGHT_GOAL) - 5),
+          max: Math.min(260, Math.max(...vals, WEIGHT_START) + 5),
+        }
+      }
+    }
+  });
 }
 
 // ===================== WEEKLY =====================
@@ -2941,10 +3134,10 @@ function renderMonthly() {
       type: 'line',
       data: { labels: wLabels, datasets: [
         { label:'Weight', data: wVals, borderColor:'#7c9a82', backgroundColor:'rgba(124,154,130,0.08)', pointBackgroundColor:'#7c9a82', pointRadius:5, tension:0.3, fill:true },
-        { label:'Goal', data: Array(wVals.length).fill(205), borderColor:'#4a9d6e', borderDash:[6,4], pointRadius:0, borderWidth:1.5, fill:false }
+        { label:'Goal', data: Array(wVals.length).fill(WEIGHT_GOAL), borderColor:'#4a9d6e', borderDash:[6,4], pointRadius:0, borderWidth:1.5, fill:false }
       ]},
       options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
-        scales:{ x:{ticks:{color:'#6b7280',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}}, y:{ticks:{color:'#6b7280',callback:v=>v+' lbs'},grid:{color:'rgba(0,0,0,0.05)'},min:Math.max(180,Math.min(...wVals)-3),max:Math.min(260,Math.max(...wVals,224)+3) } } }
+        scales:{ x:{ticks:{color:'#6b7280',font:{size:10}},grid:{color:'rgba(0,0,0,0.05)'}}, y:{ticks:{color:'#6b7280',callback:v=>v+' lbs'},grid:{color:'rgba(0,0,0,0.05)'},min:Math.max(180,Math.min(...wVals)-3),max:Math.min(260,Math.max(...wVals,WEIGHT_START)+3) } } }
     });
   }
 
