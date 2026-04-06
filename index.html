@@ -330,6 +330,9 @@
   .heat-day.done { background: rgba(124,154,130,0.65); color: #ffffff; }
   .heat-day.partial { background: rgba(124,154,130,0.25); color: var(--muted); }
   .heat-day.rest-day { background: var(--bg2); color: var(--muted2); font-style: italic; }
+  .heat-day.nutri-good { background: rgba(74,157,110,0.55); color: #ffffff; }
+  .heat-day.nutri-warn { background: rgba(210,150,50,0.45); color: #ffffff; }
+  .heat-day.nutri-none { background: var(--bg2); color: var(--muted2); }
   .heat-day.today { outline: 2px solid var(--sage); outline-offset: 1px; }
   .heat-day-label { font-family: var(--font-cond); font-size: 11px; color: var(--muted2); text-align: center; letter-spacing: 0.5px; margin-bottom: 4px; }
   .heatmap-days-header { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 8px; }
@@ -1586,7 +1589,7 @@
   <div class="section-title">Weekly Stats</div>
   <div class="section-sub" id="weekly-range-label">Current week</div>
 
-  <div class="grid-4" style="margin-bottom:20px;">
+  <div class="grid-4" style="margin-bottom:14px;">
     <div class="card">
       <div class="card-title">Workouts Done</div>
       <div class="stat-val" id="wk-done">0</div>
@@ -1609,32 +1612,53 @@
     </div>
   </div>
 
+  <div class="grid-2" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-title">Meals Logged</div>
+      <div class="stat-val" style="color:var(--green);" id="wk-meals">0</div>
+      <div class="stat-label">days with meals tracked</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Whole30 Compliance</div>
+      <div class="stat-val" style="color:var(--sage);" id="wk-compliance">—</div>
+      <div class="stat-label">of logged days fully compliant</div>
+    </div>
+  </div>
+
   <div class="grid-2">
     <div class="card">
-      <div class="card-title" style="margin-bottom:14px;">Completion Rate</div>
+      <div class="card-title" style="margin-bottom:14px;">Workout Completion</div>
       <div class="chart-wrap" style="height:220px;">
         <canvas id="week-completion-chart"></canvas>
       </div>
     </div>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:14px;">Nutrition Compliance</div>
+      <div class="chart-wrap" style="height:220px;">
+        <canvas id="week-nutri-chart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-top:14px;">
     <div class="card">
       <div class="card-title" style="margin-bottom:14px;">Workout Type Breakdown</div>
       <div class="chart-wrap" style="height:220px;">
         <canvas id="week-type-chart"></canvas>
       </div>
     </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title" style="margin-bottom:14px;">Calories Burned This Week</div>
-    <div class="chart-wrap" style="height:200px;">
-      <canvas id="week-cal-chart"></canvas>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:14px;">Effort Over The Week</div>
+      <div class="chart-wrap" style="height:220px;">
+        <canvas id="week-effort-chart"></canvas>
+      </div>
     </div>
   </div>
 
   <div class="card" style="margin-top:14px;">
-    <div class="card-title" style="margin-bottom:14px;">Effort Over The Week</div>
+    <div class="card-title" style="margin-bottom:14px;">Calories Burned This Week</div>
     <div class="chart-wrap" style="height:200px;">
-      <canvas id="week-effort-chart"></canvas>
+      <canvas id="week-cal-chart"></canvas>
     </div>
   </div>
 </div>
@@ -1647,7 +1671,7 @@
     <button onclick="changeMonth(1)">&#8594;</button>
   </div>
 
-  <div class="grid-4" style="margin-bottom:20px;">
+  <div class="grid-4" style="margin-bottom:14px;">
     <div class="card">
       <div class="card-title">Consistency</div>
       <div class="stat-val" id="mo-pct">—</div>
@@ -1670,7 +1694,20 @@
     </div>
   </div>
 
-  <!-- Heatmap -->
+  <div class="grid-2" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-title">Meals Logged</div>
+      <div class="stat-val" style="color:var(--green);" id="mo-meals">0</div>
+      <div class="stat-label">days with meals tracked</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Compliance Rate</div>
+      <div class="stat-val" style="color:var(--sage);" id="mo-compliance">—</div>
+      <div class="stat-label">of logged days fully compliant</div>
+    </div>
+  </div>
+
+  <!-- Workout Heatmap -->
   <div class="card" style="margin-bottom:20px;">
     <div class="card-title" style="margin-bottom:14px;">Workout Heatmap</div>
     <div class="heatmap-days-header" id="heatmap-header"></div>
@@ -1679,6 +1716,18 @@
       <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:2px;background:rgba(124,154,130,0.65);display:inline-block;"></span>Workout done</span>
       <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:2px;background:var(--bg2);display:inline-block;border:1px solid var(--border);"></span>Rest day</span>
       <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:2px;background:var(--bg3);display:inline-block;"></span>Missed</span>
+    </div>
+  </div>
+
+  <!-- Nutrition Heatmap -->
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-title" style="margin-bottom:14px;">Nutrition Heatmap</div>
+    <div class="heatmap-days-header" id="nutri-heatmap-header"></div>
+    <div class="heatmap-grid" id="nutri-heatmap-grid"></div>
+    <div style="display:flex;gap:16px;margin-top:14px;align-items:center;font-size:12px;color:var(--muted);">
+      <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:2px;background:rgba(74,157,110,0.55);display:inline-block;"></span>All compliant</span>
+      <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:2px;background:rgba(210,150,50,0.45);display:inline-block;"></span>Some non-compliant</span>
+      <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:2px;background:var(--bg2);display:inline-block;border:1px solid var(--border);"></span>No meals logged</span>
     </div>
   </div>
 
@@ -1698,10 +1747,18 @@
     </div>
   </div>
 
-  <div class="card">
-    <div class="card-title" style="margin-bottom:14px;">Effort Trend</div>
-    <div class="chart-wrap" style="height:200px;">
-      <canvas id="mo-effort-chart"></canvas>
+  <div class="grid-2" style="margin-top:14px;">
+    <div class="card">
+      <div class="card-title" style="margin-bottom:14px;">Effort Trend</div>
+      <div class="chart-wrap" style="height:200px;">
+        <canvas id="mo-effort-chart"></canvas>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:14px;">Nutrition Compliance</div>
+      <div class="chart-wrap" style="height:200px;">
+        <canvas id="mo-nutri-chart"></canvas>
+      </div>
     </div>
   </div>
 
@@ -2983,7 +3040,7 @@ function renderWeightChart(sorted) {
 }
 
 // ===================== WEEKLY =====================
-let wkCompChart = null, wkTypeChart = null, wkEffortChart = null, wkCalChart = null;
+let wkCompChart = null, wkTypeChart = null, wkEffortChart = null, wkCalChart = null, wkNutriChart = null;
 
 function renderWeekly() {
   const ws = getWeekStart();
@@ -3065,11 +3122,37 @@ function renderWeekly() {
         scales: { x: { ticks: { color: '#6b7280' }, grid: { display: false } }, y: { ticks: { color: '#6b7280', callback: v => v.toLocaleString() + ' kcal' }, grid: { color: 'rgba(0,0,0,0.05)' }, beginAtZero: true } } }
     });
   }
+
+  // --- Nutrition stats ---
+  const wkMealEntries = wd.map(d => getMealEntry(d)).filter(Boolean);
+  const wkMealDays = wkMealEntries.filter(e => Object.keys(e.meals).length > 0);
+  document.getElementById('wk-meals').textContent = wkMealDays.length;
+  if (wkMealDays.length > 0) {
+    const compliantDays = wkMealDays.filter(e => Object.values(e.meals).every(m => m.compliant)).length;
+    document.getElementById('wk-compliance').textContent = Math.round((compliantDays / wkMealDays.length) * 100) + '%';
+  } else {
+    document.getElementById('wk-compliance').textContent = '—';
+  }
+
+  // Nutrition compliance chart
+  if (wkNutriChart) { wkNutriChart.destroy(); }
+  const nutriData = wd.map(d => {
+    const entry = getMealEntry(d);
+    if (!entry || Object.keys(entry.meals).length === 0) return null;
+    return Object.values(entry.meals).every(m => m.compliant) ? 1 : 0.5;
+  });
+  const nutriColors = nutriData.map(v => v === null ? '#e5e4e0' : v === 1 ? '#4a9d6e' : '#d2962a');
+  wkNutriChart = new Chart(document.getElementById('week-nutri-chart'), {
+    type: 'bar',
+    data: { labels: compLabels, datasets: [{ data: nutriData.map(v => v === null ? 0.3 : v), backgroundColor: nutriColors, borderRadius: 6, borderSkipped: false }] },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
+      scales: { x: { ticks: { color: '#6b7280' }, grid: { display: false } }, y: { display: false, max: 1.2 } } }
+  });
 }
 
 // ===================== MONTHLY =====================
 let currentMonthDate = new Date();
-let moWeightChart = null, moTypeChart = null, moEffortChart = null, moCalChart = null;
+let moWeightChart = null, moTypeChart = null, moEffortChart = null, moCalChart = null, moNutriChart = null;
 
 function changeMonth(dir) {
   currentMonthDate.setMonth(currentMonthDate.getMonth() + dir);
@@ -3178,6 +3261,62 @@ function renderMonthly() {
       data: { labels: cLabels, datasets: [{ data: cData, backgroundColor: 'rgba(201,81,74,0.18)', borderColor: '#c9514a', borderWidth: 1.5, borderRadius: 6, borderSkipped: false }] },
       options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
         scales:{ x:{ticks:{color:'#6b7280',font:{size:10}},grid:{display:false}}, y:{beginAtZero:true, ticks:{color:'#6b7280',callback: v => v.toLocaleString()+' kcal'},grid:{color:'rgba(0,0,0,0.05)'}} } }
+    });
+  }
+
+  // --- Nutrition stats ---
+  const moMealEntries = data.meals.filter(m => m.date.startsWith(prefix));
+  const moMealDays = moMealEntries.filter(e => Object.keys(e.meals).length > 0);
+  document.getElementById('mo-meals').textContent = moMealDays.length;
+  if (moMealDays.length > 0) {
+    const compliantDays = moMealDays.filter(e => Object.values(e.meals).every(m => m.compliant)).length;
+    document.getElementById('mo-compliance').textContent = Math.round((compliantDays / moMealDays.length) * 100) + '%';
+  } else {
+    document.getElementById('mo-compliance').textContent = '—';
+  }
+
+  // Nutrition heatmap
+  const nutHeader = document.getElementById('nutri-heatmap-header');
+  nutHeader.innerHTML = ['S','M','T','W','T','F','S'].map(d => `<div class="heat-day-label">${d}</div>`).join('');
+  const nutGrid = document.getElementById('nutri-heatmap-grid');
+  const nutCells = [];
+  for (let i = 0; i < firstDow; i++) nutCells.push('<div></div>');
+  for (let day = 1; day <= daysInMonth; day++) {
+    const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const isToday = dateStr === todayStr;
+    const isFuture = dateStr > todayStr;
+    const entry = getMealEntry(dateStr);
+    const hasMeals = entry && Object.keys(entry.meals).length > 0;
+    let cls = 'heat-day';
+    if (isFuture) {
+      // leave default
+    } else if (hasMeals) {
+      const allCompliant = Object.values(entry.meals).every(m => m.compliant);
+      cls += allCompliant ? ' nutri-good' : ' nutri-warn';
+    } else {
+      cls += ' nutri-none';
+    }
+    if (isToday) cls += ' today';
+    nutCells.push(`<div class="${cls}" title="${dateStr}">${day}</div>`);
+  }
+  nutGrid.innerHTML = nutCells.join('');
+
+  // Nutrition compliance chart
+  if (moNutriChart) { moNutriChart.destroy(); }
+  const nutSorted = [...moMealDays].sort((a,b) => a.date.localeCompare(b.date));
+  if (nutSorted.length > 0) {
+    const nutLabels = nutSorted.map(e => fmt(e.date));
+    const nutData = nutSorted.map(e => {
+      const mealVals = Object.values(e.meals);
+      if (mealVals.length === 0) return 0;
+      return mealVals.filter(m => m.compliant).length / mealVals.length;
+    });
+    const nutColors = nutData.map(v => v >= 1 ? '#4a9d6e' : v > 0 ? '#d2962a' : '#c9514a');
+    moNutriChart = new Chart(document.getElementById('mo-nutri-chart'), {
+      type: 'bar',
+      data: { labels: nutLabels, datasets: [{ data: nutData.map(v => Math.max(0.05, v)), backgroundColor: nutColors, borderRadius: 6, borderSkipped: false }] },
+      options: { responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+        scales:{ x:{ticks:{color:'#6b7280',font:{size:10}},grid:{display:false}}, y:{display:false, max:1.15} } }
     });
   }
 }
