@@ -833,6 +833,224 @@
   .rules-yes li::before { background: rgba(74,157,110,0.35); }
   .rules-no li::before { background: rgba(201,81,74,0.3); }
   .rules-gray li::before { background: rgba(184,122,42,0.3); }
+  /* MEAL PREP PAGE */
+  .view-switcher { display: flex; gap: 6px; margin-bottom: 20px; }
+  .view-btn {
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 8px 18px;
+    font-family: var(--font-cond);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .view-btn:hover { border-color: var(--text); color: var(--text); }
+  .view-btn.active { background: var(--sage); border-color: var(--sage); color: #fff; }
+  /* Ingredient rows */
+  .ingr-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .ingr-row .form-input { flex: 1; }
+  .ingr-row .ingr-qty { width: 100px; flex: none; }
+  .ingr-remove {
+    background: none;
+    border: none;
+    color: var(--muted2);
+    cursor: pointer;
+    font-size: 16px;
+    padding: 4px 6px;
+    border-radius: 4px;
+    transition: color 0.2s;
+    flex-shrink: 0;
+  }
+  .ingr-remove:hover { color: var(--red); }
+  /* Recipe cards */
+  .recipe-card {
+    background: var(--bg1);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .recipe-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .recipe-header:hover { background: var(--bg2); }
+  .recipe-name {
+    font-family: var(--font-cond);
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--text);
+  }
+  .recipe-tags { display: flex; gap: 6px; align-items: center; }
+  .recipe-body {
+    padding: 0 18px 16px;
+    display: none;
+    border-top: 1px solid var(--border);
+  }
+  .recipe-body.open { display: block; padding-top: 14px; }
+  .recipe-body h4 {
+    font-family: var(--font-cond);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+    margin-top: 14px;
+  }
+  .recipe-body h4:first-child { margin-top: 0; }
+  .recipe-body ul { list-style: none; padding: 0; }
+  .recipe-body li { font-size: 14px; color: var(--text2); padding: 3px 0; }
+  .recipe-body li .ingr-qty-label { color: var(--muted); font-size: 13px; }
+  .recipe-body .instructions { font-size: 14px; color: var(--text2); line-height: 1.6; white-space: pre-wrap; }
+  .recipe-actions { display: flex; gap: 8px; margin-top: 14px; }
+  /* Planner grid */
+  .planner-grid {
+    display: grid;
+    grid-template-columns: 80px repeat(7, 1fr);
+    gap: 4px;
+  }
+  .planner-label {
+    font-family: var(--font-cond);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    padding: 0 4px;
+  }
+  .planner-day-header {
+    font-family: var(--font-cond);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text);
+    text-align: center;
+    padding: 8px 0;
+  }
+  .planner-cell {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    min-height: 52px;
+    padding: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+  }
+  .planner-cell:hover { border-color: var(--sage2); }
+  .planner-cell.filled {
+    background: var(--sage-light);
+    border-color: rgba(124,154,130,0.25);
+    cursor: default;
+  }
+  .planner-cell .cell-name {
+    font-family: var(--font-cond);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--sage);
+    line-height: 1.2;
+  }
+  .planner-cell .cell-remove {
+    position: absolute;
+    top: 2px;
+    right: 4px;
+    background: none;
+    border: none;
+    color: var(--muted2);
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 1;
+    padding: 2px;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .planner-cell:hover .cell-remove { opacity: 1; }
+  .planner-cell .cell-empty { color: var(--muted2); font-size: 18px; }
+  /* Recipe picker */
+  .recipe-picker {
+    background: var(--bg1);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 14px;
+    margin-top: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .picker-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 6px;
+    margin-top: 10px;
+    max-height: 220px;
+    overflow-y: auto;
+  }
+  .picker-item {
+    padding: 8px 12px;
+    border-radius: 6px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.15s;
+  }
+  .picker-item:hover { border-color: var(--sage); background: var(--sage-light); color: var(--sage); }
+  /* Shopping list */
+  .shop-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .shop-item:last-child { border-bottom: none; }
+  .shop-item.checked { opacity: 0.45; }
+  .shop-item.checked .shop-name { text-decoration: line-through; }
+  .shop-check {
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    border: 1.5px solid var(--muted2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .shop-item.checked .shop-check {
+    background: var(--sage);
+    border-color: var(--sage);
+    color: #fff;
+  }
+  .shop-name { font-size: 14px; color: var(--text2); flex: 1; }
+  .shop-qty { font-size: 13px; color: var(--muted); white-space: nowrap; }
   /* RESPONSIVE tweaks */
   @media (max-width: 768px) {
     .grid-4 { grid-template-columns: repeat(2, 1fr); }
@@ -844,6 +1062,9 @@
     .checkin-grid { grid-template-columns: 1fr; }
     .weight-snap { flex-wrap: wrap; gap: 16px; }
     .rules-grid { grid-template-columns: 1fr; }
+    .planner-grid { grid-template-columns: 60px repeat(7, 1fr); gap: 3px; }
+    .planner-cell { min-height: 44px; padding: 4px; }
+    .planner-day-header { font-size: 10px; }
     .nav-tabs { overflow-x: auto; flex-wrap: nowrap; }
     .tab-btn { white-space: nowrap; flex-shrink: 0; }
   }
@@ -857,6 +1078,7 @@
     <button class="tab-btn active" onclick="showPage('today')">Today</button>
     <button class="tab-btn" onclick="showPage('log')">Log Workout</button>
     <button class="tab-btn" onclick="showPage('nutrition')">Nutrition</button>
+    <button class="tab-btn" onclick="showPage('mealprep')">Meal Prep</button>
     <button class="tab-btn" onclick="showPage('weight')">Weight</button>
     <button class="tab-btn" onclick="showPage('weekly')">Weekly</button>
     <button class="tab-btn" onclick="showPage('monthly')">Monthly</button>
@@ -1146,6 +1368,94 @@
   </div>
 </div>
 
+<!-- ===================== MEAL PREP ===================== -->
+<div id="page-mealprep" class="page">
+  <div class="section-title">Meal Prep Hub</div>
+  <div class="section-sub">Recipes, meal planning &amp; shopping lists</div>
+
+  <!-- View Switcher -->
+  <div class="view-switcher">
+    <button class="view-btn active" id="mp-view-recipes" onclick="mpSwitchView('recipes')">My Recipes</button>
+    <button class="view-btn" id="mp-view-add" onclick="mpSwitchView('add')">Add Recipe</button>
+    <button class="view-btn" id="mp-view-planner" onclick="mpSwitchView('planner')">Meal Planner</button>
+    <button class="view-btn" id="mp-view-shop" onclick="mpSwitchView('shop')">Shopping List</button>
+  </div>
+
+  <!-- Add Recipe Form -->
+  <div id="mp-section-add" style="display:none;">
+    <div class="card">
+      <div class="card-title" style="margin-bottom:14px;">New Recipe</div>
+      <div class="form-section">
+        <label class="form-label">Recipe Name</label>
+        <input type="text" class="form-input" id="mp-recipe-name" placeholder="e.g. Chicken Stir-Fry">
+      </div>
+      <div class="form-section">
+        <label class="form-label">Ingredients</label>
+        <div id="mp-ingr-rows"></div>
+        <button class="btn-sm" onclick="mpAddIngrRow()" style="margin-top:4px;">+ Add Ingredient</button>
+      </div>
+      <div class="form-section">
+        <label class="form-label">Instructions</label>
+        <textarea class="form-input" id="mp-recipe-instr" placeholder="Step by step..." rows="4" style="resize:vertical;min-height:80px;"></textarea>
+      </div>
+      <div class="form-section">
+        <label class="form-label">Tags</label>
+        <div class="meal-pills">
+          <div class="meal-pill" id="mp-tag-w30" onclick="this.classList.toggle('checked')">
+            <span class="pill-check"></span>Whole30 Compliant
+          </div>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="mpSaveRecipe()" style="margin-top:12px;">SAVE RECIPE</button>
+    </div>
+  </div>
+
+  <!-- Recipe Library -->
+  <div id="mp-section-recipes">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+      <div class="meal-pills">
+        <div class="meal-pill" id="mp-filter-w30" onclick="mpToggleFilter()">
+          <span class="pill-check"></span>Whole30 Only
+        </div>
+      </div>
+      <div style="font-size:13px;color:var(--muted);" id="mp-recipe-count"></div>
+    </div>
+    <div id="mp-recipe-list"></div>
+    <div id="mp-recipe-empty" class="empty-state" style="display:none;">
+      No recipes yet. Add your first recipe to get started!
+    </div>
+  </div>
+
+  <!-- Meal Planner -->
+  <div id="mp-section-planner" style="display:none;">
+    <div class="card" style="margin-bottom:16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <div class="card-title" style="margin-bottom:0;">Weekly Plan</div>
+        <button class="btn-sm btn-danger" onclick="mpClearPlan()">Clear Plan</button>
+      </div>
+      <div class="planner-grid" id="mp-planner-grid"></div>
+    </div>
+    <div id="mp-picker-area"></div>
+  </div>
+
+  <!-- Shopping List -->
+  <div id="mp-section-shop" style="display:none;">
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <div class="card-title" style="margin-bottom:0;">Shopping List</div>
+        <div style="display:flex;gap:6px;">
+          <button class="btn-sm" onclick="mpGenerateShoppingList()">Generate from Plan</button>
+          <button class="btn-sm btn-danger" onclick="mpClearChecked()">Clear Checked</button>
+        </div>
+      </div>
+      <div id="mp-shop-list"></div>
+      <div id="mp-shop-empty" class="empty-state" style="display:none;">
+        No items yet. Generate a list from your meal plan!
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ===================== WEIGHT ===================== -->
 <div id="page-weight" class="page">
   <div class="section-title">Weight Check-In</div>
@@ -1340,7 +1650,7 @@
 <script>
 // ===================== DATA LAYER =====================
 const STORAGE_KEY = 'dreGrind_v1';
-let data = { workouts: [], weights: [], meals: [], whole30Start: null, nodrinkStart: null, nodrinkBest: 0, nodrinkHistory: [], nodrinkLastMilestone: 0 };
+let data = { workouts: [], weights: [], meals: [], whole30Start: null, nodrinkStart: null, nodrinkBest: 0, nodrinkHistory: [], nodrinkLastMilestone: 0, recipes: [], mealPlan: [], shoppingList: [], shoppingChecked: [] };
 
 function load() {
   try {
@@ -1354,6 +1664,10 @@ function load() {
       data.nodrinkBest = parsed.nodrinkBest || 0;
       data.nodrinkHistory = parsed.nodrinkHistory || [];
       data.nodrinkLastMilestone = parsed.nodrinkLastMilestone || 0;
+      data.recipes = parsed.recipes || [];
+      data.mealPlan = parsed.mealPlan || [];
+      data.shoppingList = parsed.shoppingList || [];
+      data.shoppingChecked = parsed.shoppingChecked || [];
       // Migrate meals: old format { date, items:[] } → new { date, meals:{} }
       const rawMeals = parsed.meals || [];
       data.meals = rawMeals.map(m => {
@@ -1389,11 +1703,12 @@ function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
-  const idx = ['today','log','nutrition','weight','weekly','monthly'].indexOf(id);
+  const idx = ['today','log','nutrition','mealprep','weight','weekly','monthly'].indexOf(id);
   document.querySelectorAll('.tab-btn')[idx].classList.add('active');
   if (id === 'today') renderToday();
   if (id === 'log') renderLogTable();
   if (id === 'nutrition') renderNutrition();
+  if (id === 'mealprep') renderMealPrep();
   if (id === 'weight') renderWeightPage();
   if (id === 'weekly') renderWeekly();
   if (id === 'monthly') renderMonthly();
@@ -1904,6 +2219,321 @@ function renderNutriHistory() {
       <div class="nutri-day-status">${statusIcon}</div>
     </div>`;
   }).filter(Boolean).join('');
+}
+
+// ===================== MEAL PREP PAGE =====================
+const MP_DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const MP_MEALS = ['Breakfast','Lunch','Dinner'];
+let mpCurrentView = 'recipes';
+let mpIngrRows = [{ item: '', qty: '' }];
+let mpFilterW30 = false;
+let mpPickerTarget = null; // { day, meal }
+
+function renderMealPrep() {
+  mpSwitchView(mpCurrentView);
+}
+
+function mpSwitchView(view) {
+  mpCurrentView = view;
+  ['recipes','add','planner','shop'].forEach(v => {
+    const section = document.getElementById('mp-section-' + v);
+    const btn = document.getElementById('mp-view-' + v);
+    if (section) section.style.display = v === view ? '' : 'none';
+    if (btn) btn.classList.toggle('active', v === view);
+  });
+  if (view === 'recipes') mpRenderRecipeList();
+  if (view === 'add') mpResetRecipeForm();
+  if (view === 'planner') mpRenderPlanner();
+  if (view === 'shop') mpRenderShoppingList();
+}
+
+// --- Recipe CRUD ---
+function mpResetRecipeForm() {
+  document.getElementById('mp-recipe-name').value = '';
+  document.getElementById('mp-recipe-instr').value = '';
+  document.getElementById('mp-tag-w30').classList.remove('checked');
+  mpIngrRows = [{ item: '', qty: '' }];
+  mpRenderIngrRows();
+}
+
+function mpRenderIngrRows() {
+  const container = document.getElementById('mp-ingr-rows');
+  container.innerHTML = mpIngrRows.map((r, i) => {
+    return `<div class="ingr-row">
+      <input type="text" class="form-input" placeholder="Ingredient" value="${r.item.replace(/"/g, '&quot;')}" onchange="mpIngrRows[${i}].item=this.value">
+      <input type="text" class="form-input ingr-qty" placeholder="Qty" value="${r.qty.replace(/"/g, '&quot;')}" onchange="mpIngrRows[${i}].qty=this.value">
+      <button class="ingr-remove" onclick="mpRemoveIngrRow(${i})">&times;</button>
+    </div>`;
+  }).join('');
+}
+
+function mpAddIngrRow() {
+  mpIngrRows.push({ item: '', qty: '' });
+  mpRenderIngrRows();
+  // Focus the new item input
+  const rows = document.querySelectorAll('#mp-ingr-rows .ingr-row');
+  const last = rows[rows.length - 1];
+  if (last) last.querySelector('input').focus();
+}
+
+function mpRemoveIngrRow(idx) {
+  if (mpIngrRows.length <= 1) return;
+  mpIngrRows.splice(idx, 1);
+  mpRenderIngrRows();
+}
+
+function mpSaveRecipe() {
+  const name = document.getElementById('mp-recipe-name').value.trim();
+  const instructions = document.getElementById('mp-recipe-instr').value.trim();
+  const isW30 = document.getElementById('mp-tag-w30').classList.contains('checked');
+
+  // Read current ingredient values from DOM before validating
+  document.querySelectorAll('#mp-ingr-rows .ingr-row').forEach((row, i) => {
+    const inputs = row.querySelectorAll('input');
+    mpIngrRows[i].item = inputs[0].value.trim();
+    mpIngrRows[i].qty = inputs[1].value.trim();
+  });
+
+  if (!name) { alert('Enter a recipe name.'); return; }
+  const ingredients = mpIngrRows.filter(r => r.item);
+  if (ingredients.length === 0) { alert('Add at least one ingredient.'); return; }
+
+  const recipe = {
+    id: Date.now(),
+    name,
+    tags: isW30 ? ['Whole30'] : [],
+    ingredients: ingredients.map(r => ({ item: r.item, qty: r.qty })),
+    instructions,
+    createdAt: today()
+  };
+  data.recipes.push(recipe);
+  save();
+  showToast('Recipe saved!');
+  mpSwitchView('recipes');
+}
+
+function mpDeleteRecipe(id) {
+  if (!confirm('Delete this recipe?')) return;
+  data.recipes = data.recipes.filter(r => r.id !== id);
+  // Also remove from meal plan
+  data.mealPlan = data.mealPlan.filter(p => p.recipeId !== id);
+  save();
+  mpRenderRecipeList();
+}
+
+function mpToggleFilter() {
+  mpFilterW30 = !mpFilterW30;
+  document.getElementById('mp-filter-w30').classList.toggle('checked', mpFilterW30);
+  mpRenderRecipeList();
+}
+
+function mpToggleRecipe(id) {
+  const body = document.getElementById('mp-recipe-body-' + id);
+  if (body) body.classList.toggle('open');
+}
+
+function mpRenderRecipeList() {
+  let recipes = [...data.recipes].reverse();
+  if (mpFilterW30) {
+    recipes = recipes.filter(r => r.tags && r.tags.includes('Whole30'));
+  }
+
+  const countEl = document.getElementById('mp-recipe-count');
+  countEl.textContent = `${recipes.length} recipe${recipes.length !== 1 ? 's' : ''}`;
+
+  const listEl = document.getElementById('mp-recipe-list');
+  const emptyEl = document.getElementById('mp-recipe-empty');
+
+  if (recipes.length === 0) {
+    listEl.innerHTML = '';
+    emptyEl.style.display = 'block';
+    return;
+  }
+  emptyEl.style.display = 'none';
+
+  listEl.innerHTML = recipes.map(r => {
+    const tagBadges = (r.tags || []).map(t => `<span class="type-badge badge-pilates">${t}</span>`).join('');
+    const ingrList = r.ingredients.map(ing => {
+      const qtyLabel = ing.qty ? `<span class="ingr-qty-label"> — ${ing.qty}</span>` : '';
+      return `<li>${ing.item}${qtyLabel}</li>`;
+    }).join('');
+    return `<div class="recipe-card">
+      <div class="recipe-header" onclick="mpToggleRecipe(${r.id})">
+        <div class="recipe-name">${r.name}</div>
+        <div class="recipe-tags">${tagBadges}<button class="delete-btn" onclick="event.stopPropagation();mpDeleteRecipe(${r.id})">&#10005;</button></div>
+      </div>
+      <div class="recipe-body" id="mp-recipe-body-${r.id}">
+        <h4>Ingredients</h4>
+        <ul>${ingrList}</ul>
+        ${r.instructions ? `<h4>Instructions</h4><div class="instructions">${r.instructions}</div>` : ''}
+        <div class="recipe-actions">
+          <button class="btn-sm" onclick="mpSwitchView('planner')">Plan This</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// --- Meal Planner ---
+function mpRenderPlanner() {
+  const grid = document.getElementById('mp-planner-grid');
+  // Header row: empty corner + day headers
+  let html = '<div class="planner-label"></div>';
+  MP_DAYS.forEach(d => { html += `<div class="planner-day-header">${d.slice(0,3)}</div>`; });
+
+  // Meal rows
+  MP_MEALS.forEach(meal => {
+    html += `<div class="planner-label">${meal}</div>`;
+    MP_DAYS.forEach(day => {
+      const entry = data.mealPlan.find(p => p.day === day && p.meal === meal);
+      if (entry) {
+        const recipe = data.recipes.find(r => r.id === entry.recipeId);
+        const name = recipe ? recipe.name : '(deleted)';
+        html += `<div class="planner-cell filled">
+          <span class="cell-name">${name}</span>
+          <button class="cell-remove" onclick="mpUnassign('${day}','${meal}')">&times;</button>
+        </div>`;
+      } else {
+        html += `<div class="planner-cell" onclick="mpStartPick('${day}','${meal}')">
+          <span class="cell-empty">+</span>
+        </div>`;
+      }
+    });
+  });
+  grid.innerHTML = html;
+
+  // Clear picker if no target
+  if (!mpPickerTarget) {
+    document.getElementById('mp-picker-area').innerHTML = '';
+  }
+}
+
+function mpStartPick(day, meal) {
+  mpPickerTarget = { day, meal };
+  const area = document.getElementById('mp-picker-area');
+  if (data.recipes.length === 0) {
+    area.innerHTML = `<div class="recipe-picker"><div style="font-size:13px;color:var(--muted);">No recipes yet. Add some recipes first!</div></div>`;
+    return;
+  }
+  let html = `<div class="recipe-picker">
+    <div style="font-size:13px;color:var(--muted);">Pick a recipe for <strong>${day} ${meal}</strong>:</div>
+    <div class="picker-list">`;
+  data.recipes.forEach(r => {
+    const tagLabel = (r.tags || []).includes('Whole30') ? ' <span class="type-badge badge-pilates" style="font-size:9px;padding:1px 5px;">W30</span>' : '';
+    html += `<div class="picker-item" onclick="mpAssign(${r.id})">${r.name}${tagLabel}</div>`;
+  });
+  html += `</div><button class="btn-sm btn-danger" onclick="mpCancelPick()" style="margin-top:10px;">Cancel</button></div>`;
+  area.innerHTML = html;
+}
+
+function mpAssign(recipeId) {
+  if (!mpPickerTarget) return;
+  // Remove existing assignment for this slot
+  data.mealPlan = data.mealPlan.filter(p => !(p.day === mpPickerTarget.day && p.meal === mpPickerTarget.meal));
+  data.mealPlan.push({ day: mpPickerTarget.day, meal: mpPickerTarget.meal, recipeId });
+  mpPickerTarget = null;
+  save();
+  mpRenderPlanner();
+}
+
+function mpUnassign(day, meal) {
+  data.mealPlan = data.mealPlan.filter(p => !(p.day === day && p.meal === meal));
+  save();
+  mpRenderPlanner();
+}
+
+function mpCancelPick() {
+  mpPickerTarget = null;
+  document.getElementById('mp-picker-area').innerHTML = '';
+}
+
+function mpClearPlan() {
+  if (!confirm('Clear the entire meal plan?')) return;
+  data.mealPlan = [];
+  save();
+  mpRenderPlanner();
+  showToast('Meal plan cleared.');
+}
+
+// --- Shopping List ---
+function mpGenerateShoppingList() {
+  // Collect all recipe IDs from the plan
+  const recipeIds = [...new Set(data.mealPlan.map(p => p.recipeId))];
+  const ingredientMap = {};
+
+  recipeIds.forEach(id => {
+    const recipe = data.recipes.find(r => r.id === id);
+    if (!recipe) return;
+    // Count how many times this recipe appears in the plan
+    const count = data.mealPlan.filter(p => p.recipeId === id).length;
+    recipe.ingredients.forEach(ing => {
+      const key = ing.item.toLowerCase().trim();
+      if (!ingredientMap[key]) {
+        ingredientMap[key] = { item: ing.item, quantities: [] };
+      }
+      for (let i = 0; i < count; i++) {
+        if (ing.qty) ingredientMap[key].quantities.push(ing.qty);
+      }
+    });
+  });
+
+  data.shoppingList = Object.values(ingredientMap).map(v => ({
+    item: v.item,
+    qty: v.quantities.join(', ')
+  }));
+  data.shoppingChecked = [];
+  save();
+  mpRenderShoppingList();
+  if (data.shoppingList.length > 0) {
+    showToast(`Shopping list: ${data.shoppingList.length} items`);
+  }
+}
+
+function mpToggleShopItem(item) {
+  const idx = data.shoppingChecked.indexOf(item);
+  if (idx >= 0) {
+    data.shoppingChecked.splice(idx, 1);
+  } else {
+    data.shoppingChecked.push(item);
+  }
+  save();
+  mpRenderShoppingList();
+}
+
+function mpClearChecked() {
+  data.shoppingList = data.shoppingList.filter(s => !data.shoppingChecked.includes(s.item));
+  data.shoppingChecked = [];
+  save();
+  mpRenderShoppingList();
+}
+
+function mpRenderShoppingList() {
+  const listEl = document.getElementById('mp-shop-list');
+  const emptyEl = document.getElementById('mp-shop-empty');
+
+  if (data.shoppingList.length === 0) {
+    listEl.innerHTML = '';
+    emptyEl.style.display = 'block';
+    return;
+  }
+  emptyEl.style.display = 'none';
+
+  // Sort: unchecked first, then checked
+  const sorted = [...data.shoppingList].sort((a, b) => {
+    const aChecked = data.shoppingChecked.includes(a.item) ? 1 : 0;
+    const bChecked = data.shoppingChecked.includes(b.item) ? 1 : 0;
+    return aChecked - bChecked;
+  });
+
+  listEl.innerHTML = sorted.map(s => {
+    const isChecked = data.shoppingChecked.includes(s.item);
+    const escapedItem = s.item.replace(/'/g, "\\'");
+    return `<div class="shop-item${isChecked ? ' checked' : ''}" onclick="mpToggleShopItem('${escapedItem}')">
+      <div class="shop-check">${isChecked ? '&#10003;' : ''}</div>
+      <div class="shop-name">${s.item}</div>
+      <div class="shop-qty">${s.qty}</div>
+    </div>`;
+  }).join('');
 }
 
 function calcStreak() {
