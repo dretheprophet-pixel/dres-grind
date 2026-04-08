@@ -6,6 +6,7 @@
 <title>Dre's Fitness Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <style>
   :root {
     --bg0: #f4f3f0;
@@ -1776,6 +1777,44 @@
 const STORAGE_KEY = 'dreGrind_v1';
 let data = { workouts: [], weights: [], meals: [], whole30Start: null, nodrinkStart: null, nodrinkBest: 0, nodrinkHistory: [], nodrinkLastMilestone: 0, recipes: [], mealPlan: [], shoppingList: [], shoppingChecked: [] };
 
+// ---- Supabase setup ----
+const SUPABASE_URL = 'https://xmolnnnrmcyenntzrrig.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhtb2xubm5ybWN5ZW5udHpycmlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU2MTY5MTAsImV4cCI6MjA5MTE5MjkxMH0.fHgg6m5QYejQCE--0P8jyWwBA64OnCLnsUvif9OjHrI';
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const supabaseRecipes = {
+  async fetchAll() {
+    const { data: rows, error } = await supabaseClient
+      .from('recipes')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    return rows.map(r => ({
+      id: Number(r.id),
+      name: r.name,
+      tags: r.tags || [],
+      ingredients: r.ingredients,
+      instructions: r.instructions || '',
+      createdAt: r.created_at
+    }));
+  },
+  async upsert(recipe) {
+    const { error } = await supabaseClient.from('recipes').upsert({
+      id: recipe.id,
+      name: recipe.name,
+      tags: recipe.tags,
+      ingredients: recipe.ingredients,
+      instructions: recipe.instructions,
+      created_at: recipe.createdAt
+    });
+    if (error) throw error;
+  },
+  async delete(id) {
+    const { error } = await supabaseClient.from('recipes').delete().eq('id', id);
+    if (error) throw error;
+  }
+};
+
 function load() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -1805,10 +1844,38 @@ function load() {
     }
   } catch(e) {}
 }
+
+async function syncRecipesFromSupabase() {
+  try {
+    // Push any localStorage recipes to Supabase first (one-time migration)
+    if (data.recipes.length > 0) {
+      for (const recipe of data.recipes) {
+        await supabaseRecipes.upsert(recipe).catch(() => {});
+      }
+    }
+    // Fetch all recipes from Supabase and merge
+    const remote = await supabaseRecipes.fetchAll();
+    const localById = new Map(data.recipes.map(r => [r.id, r]));
+    const remoteById = new Map(remote.map(r => [r.id, r]));
+    // Supabase wins on conflicts; keep local-only recipes too
+    const merged = [...remote];
+    for (const [id, recipe] of localById) {
+      if (!remoteById.has(id)) merged.push(recipe);
+    }
+    data.recipes = merged;
+    save();
+    // Re-render if the meal prep tab is visible
+    if (typeof mpRenderRecipeList === 'function') mpRenderRecipeList();
+  } catch(e) {
+    console.warn('Supabase sync failed, using localStorage:', e);
+  }
+}
+
 function save() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 load();
+syncRecipesFromSupabase();
 
 // ===================== SCHEDULE CONFIG =====================
 const SCHEDULE = {
@@ -2437,6 +2504,7 @@ function mpSaveRecipe() {
   };
   data.recipes.push(recipe);
   save();
+  supabaseRecipes.upsert(recipe).catch(e => console.warn('Supabase upsert failed:', e));
   showToast('Recipe saved!');
   mpSwitchView('recipes');
 }
@@ -2447,6 +2515,7 @@ function mpDeleteRecipe(id) {
   // Also remove from meal plan
   data.mealPlan = data.mealPlan.filter(p => p.recipeId !== id);
   save();
+  supabaseRecipes.delete(id).catch(e => console.warn('Supabase delete failed:', e));
   mpRenderRecipeList();
 }
 
