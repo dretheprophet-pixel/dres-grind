@@ -1831,7 +1831,7 @@ function showPage(id) {
   const idx = ['today','log','nutrition','mealprep','weight','weekly','monthly'].indexOf(id);
   document.querySelectorAll('.tab-btn')[idx].classList.add('active');
   if (id === 'today') renderToday();
-  if (id === 'log') renderLogTable();
+  if (id === 'log') { document.getElementById('log-date').value = today(); renderLogTable(); }
   if (id === 'nutrition') renderNutrition();
   if (id === 'mealprep') renderMealPrep();
   if (id === 'weight') renderWeightPage();
@@ -1840,7 +1840,7 @@ function showPage(id) {
 }
 
 // ===================== HELPERS =====================
-function today() { return new Date().toISOString().slice(0,10); }
+function today() { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'); }
 function fmt(dateStr) {
   if (!dateStr) return '';
   const d = new Date(dateStr + 'T12:00:00');
@@ -2673,13 +2673,13 @@ function calcStreak() {
   let streak = 0;
   const d = new Date();
   // check if today is logged or it's still early and yesterday starts the check
-  const todayStr = d.toISOString().slice(0,10);
+  const todayStr = today();
   let checkDate = new Date(d);
   if (!logged.has(todayStr)) {
     checkDate.setDate(checkDate.getDate() - 1);
   }
   while (true) {
-    const ds = checkDate.toISOString().slice(0,10);
+    const ds = checkDate.getFullYear() + '-' + String(checkDate.getMonth()+1).padStart(2,'0') + '-' + String(checkDate.getDate()).padStart(2,'0');
     const dow = checkDate.getDay();
     if (REST_DAYS.includes(dow)) {
       checkDate.setDate(checkDate.getDate() - 1);
