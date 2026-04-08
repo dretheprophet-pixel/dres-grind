@@ -329,7 +329,6 @@
   }
   .heat-day.done { background: rgba(124,154,130,0.65); color: #ffffff; }
   .heat-day.partial { background: rgba(124,154,130,0.25); color: var(--muted); }
-  .heat-day.rest-day { background: var(--bg2); color: var(--muted2); font-style: italic; }
   .heat-day.nutri-good { background: rgba(74,157,110,0.55); color: #ffffff; }
   .heat-day.nutri-warn { background: rgba(210,150,50,0.45); color: #ffffff; }
   .heat-day.nutri-none { background: var(--bg2); color: var(--muted2); }
@@ -1821,7 +1820,6 @@ const SCHEDULE = {
   5: { label: 'Friday', type: 'workout', time: '6:00 – 7:00 AM', desc: '30 min Strength/Core  +  15–20 min Boxing (FitXR)' },
   6: { label: 'Saturday', type: 'workout', time: '8:00 AM', desc: '30 min Strength/Core  +  15–20 min Boxing (FitXR)' },
 };
-const REST_DAYS = [0, 3]; // Sunday (pilates), Wednesday
 
 // ===================== NAV =====================
 function showPage(id) {
@@ -2681,10 +2679,6 @@ function calcStreak() {
   while (true) {
     const ds = checkDate.getFullYear() + '-' + String(checkDate.getMonth()+1).padStart(2,'0') + '-' + String(checkDate.getDate()).padStart(2,'0');
     const dow = checkDate.getDay();
-    if (REST_DAYS.includes(dow)) {
-      checkDate.setDate(checkDate.getDate() - 1);
-      continue;
-    }
     if (logged.has(ds)) {
       streak++;
       checkDate.setDate(checkDate.getDate() - 1);
@@ -3067,13 +3061,12 @@ function renderWeekly() {
   const compLabels = wd.map(d => { const dow = new Date(d+'T12:00:00').getDay(); return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][dow]; });
   const compData = wd.map(d => {
     const dow = new Date(d+'T12:00:00').getDay();
-    if (REST_DAYS.includes(dow)) return null;
     return data.workouts.some(w => w.date === d) ? 1 : 0;
   });
-  const compColors = compData.map(v => v === null ? '#e5e4e0' : v === 1 ? '#7c9a82' : '#d9d8d4');
+  const compColors = compData.map(v => v === 1 ? '#7c9a82' : '#d9d8d4');
   wkCompChart = new Chart(document.getElementById('week-completion-chart'), {
     type: 'bar',
-    data: { labels: compLabels, datasets: [{ data: compData.map(v => v === null ? 0.3 : v || 0.05), backgroundColor: compColors, borderRadius: 6, borderSkipped: false }] },
+    data: { labels: compLabels, datasets: [{ data: compData.map(v => v || 0.05), backgroundColor: compColors, borderRadius: 6, borderSkipped: false }] },
     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } },
       scales: { x: { ticks: { color: '#6b7280' }, grid: { display: false } }, y: { display: false, max: 1.2 } } }
   });
@@ -3174,11 +3167,10 @@ function renderMonthly() {
   const moWeights = data.weights.filter(w => w.date.startsWith(prefix)).sort((a,b) => a.date.localeCompare(b.date));
 
   // Stats
-  const scheduledCount = [...Array(daysInMonth)].filter((_,i) => {
-    const dow = new Date(year, month, i+1).getDay();
-    return !REST_DAYS.includes(dow);
-  }).length;
-  const pct = scheduledCount > 0 ? Math.round((moWorkouts.length / scheduledCount) * 100) : 0;
+  const todayDate = new Date();
+  const pastDays = (year === todayDate.getFullYear() && month === todayDate.getMonth())
+    ? todayDate.getDate() : daysInMonth;
+  const pct = pastDays > 0 ? Math.round((moWorkouts.length / pastDays) * 100) : 0;
   document.getElementById('mo-pct').textContent = pct + '%';
   document.getElementById('mo-total').textContent = moWorkouts.length;
   document.getElementById('mo-mins').textContent = moWorkouts.reduce((a,w) => a+w.duration, 0);
@@ -3195,14 +3187,11 @@ function renderMonthly() {
   for (let day = 1; day <= daysInMonth; day++) {
     const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
     const dow = new Date(year, month, day).getDay();
-    const isRest = REST_DAYS.includes(dow);
     const isToday = dateStr === todayStr;
     const hasWorkout = data.workouts.some(w => w.date === dateStr);
     const isFuture = dateStr > todayStr;
     let cls = 'heat-day';
-    if (isRest) cls += ' rest-day';
-    else if (hasWorkout) cls += ' done';
-    else if (!isFuture) cls += ''; // missed
+    if (hasWorkout) cls += ' done';
     if (isToday) cls += ' today';
     cells.push(`<div class="${cls}" title="${dateStr}">${day}</div>`);
   }
