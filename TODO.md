@@ -1,58 +1,69 @@
-# Dre's Grind — v2 Redesign TODO
+# Dre's Grind — TODO
 
 ## Current State
-Single HTML file (`index.html`) on branch `redesign/v2`.
+Single HTML file (`index.html`) on branch `feature/v3-recipe-hub`.
 Live at: https://dretheprophet-pixel.github.io/dres-grind
 Repo: https://github.com/dretheprophet-pixel/dres-grind
 
-Design system complete — light mode, sage green accent, Chart.js 
-updated, all old dark palette removed.
+v2 complete — sage design system, Whole30 tracker, no-drink streak,
+meal prep hub, San Diego countdown, weight tracking, heatmaps.
 
 ---
 
-## Milestone: v2 — Full Redesign (due May 16, 2026)
+## Milestone: v2 — Full Redesign ✅ COMPLETE
+
+- [x] Issue #1 — Design system: light mode + sage accent
+- [x] Issue #2 — Today page: countdown, Whole30, no-drink streak
+- [x] Issue #3 — Workout logging: activity dropdown
+- [x] Issue #4 — Whole30 & nutrition tracker
+- [x] Issue #5 — No-drink streak tracker
+- [x] Issue #6 — Meal prep hub: recipes + shopping lists
+- [x] Issue #7 — Weight & milestone tracking
+- [x] Issue #8 — Weekly & monthly stats, heatmaps
+
+---
+
+## Milestone: v3 — Smart Recipe Hub (due April 12, 2026)
 
 ### ✅ Done
-- [x] Issue #1 — Design system: light mode + sage accent
+- [x] Issue #12 — Supabase: Recipe Database Migration
+      → Recipes synced to Supabase, localStorage fallback intact,
+        one-time migration on first load, anon key secured
 
-### 🔄 In Progress
-- [ ] Issue #2 — Today page: San Diego countdown, Whole30 counter, 
-      no-drink streak, daily check-in summary
-      → Next step: prompt Claude Code to build it (button approach 
-      for Whole30 + no-drink start dates)
+### 🔄 Ready
+- [ ] Issue #13 — Vercel: Spoonacular API Proxy
+      → Serverless function to protect Spoonacular API key
+      → Pro account secured, API key ready
 
 ### 📋 Up Next
-- [ ] Issue #3 — Workout logging: activity dropdown replacing checkboxes
-- [ ] Issue #4 — Whole30 & nutrition tracker (full page)
-- [ ] Issue #5 — No-drink streak tracker (dedicated section)
-- [ ] Issue #6 — Meal prep hub: recipes + shopping lists
-- [ ] Issue #7 — Weight & milestone tracking update
-- [ ] Issue #8 — Weekly & monthly stats refresh
+- [ ] Issue #14 — Recipe Search & Auto-populate
+- [ ] Issue #15 — Recipe Images
+- [ ] Issue #16 — Whole30 Recipe Filtering
+- [ ] Issue #17 — Cross-device Sync
 
 ---
 
 ## Workflow
-- Branch: `redesign/v2` — never commit to main during redesign
-- Commit message format: `Issue #N — short description`
-- After each issue: close it on GitHub Project board
-- Final step: PR from `redesign/v2` → `main` when all 8 issues done
+- Branch: `feature/v3-recipe-hub` — never commit to main
+- Commit message format: `feat: #N short description`
+- Claude Code: always read CLAUDE.md first, propose plan, wait for approval
+- After each issue: test in browser → commit → push → close on GitHub
+- If push is rejected: `git stash` → `git pull --rebase` → `git stash pop` → push
+- Final step: PR from `feature/v3-recipe-hub` → `main` when all 6 issues done
 
 ---
 
 ## Key Dates
-- San Diego Wedding: May 23, 2026
-- Milestone due: May 16, 2026
+- San Diego Trip: May 23, 2026
+- v3 Milestone due: April 12, 2026
 
-## Data Model (current)
-```json
-data.workouts[]     // existing
-data.weights[]      // existing
-data.whole30Start   // NEW — added in Issue #2
-data.nodrinkStart   // NEW — added in Issue #2
-data.meals[]        // NEW — added in Issue #2
-```
+## Infra
+- Supabase project: `dres-grind` (xmolnnnrmcyenntzrrig.supabase.co)
+- Vercel: proxy for Spoonacular API (set up in #13)
+- Spoonacular: Pro account, API key ready
 
 ## Claude Code Tips
-- Always ask for the plan before building
-- Review in browser before committing
-- Commit after each issue with message: Issue #N — description
+- Always ask for the plan before building — no code until Dre approves
+- Review in browser before committing (check console for errors)
+- Commit after each issue: `feat: #N description`
+- Use anon key only — never secret key in client-side code
